@@ -16,4 +16,6 @@ ln -s $(pwd)/.bash_profile ~/.bash_profile
 
 touch ${HOME}/dotfiles/.keys.bash || exit
 
+curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash -o ~/.git-completion.bash
+
 source ~/.bash_profile
