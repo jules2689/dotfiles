@@ -1,5 +1,10 @@
+#School
+alias scm="ssh root@104.131.11.143"
+
 #Code Directories
 alias cdg="cd ~/Documents/Git-Repos"
+alias dc=cd
+alias bk="cd ../../../"
 
 #Mysql Aliases
 alias mysqlstart='/usr/local/bin/mysql.server start'
