@@ -2,7 +2,9 @@
 alias scm="ssh root@104.131.11.143"
 
 #Code Directories
-alias cdg="cd ~/Documents/Git-Repos"
+alias cdg="cd ~/Development"
+alias cdgs="cd ~/Development/shopify"
+alias cdv="cd ~/Development/shopify/rails/vagrant"
 alias dc=cd
 alias bk="cd ../../../"
 
