@@ -11,6 +11,7 @@ rm -r ~/dotfiles
 mkdir ~/dotfiles
 
 # Symlink all files
+cd provision
 shopt -s dotglob
 for f in *.*.bash
 do
@@ -18,10 +19,11 @@ do
   ln -sf "$(pwd)/$f" "${HOME}/dotfiles/$f"
 done
 shopt -u dotglob
+cd ..
 
 # Remove current bash profile, symlink the one from this repo
 rm ~/.bash_profile
-ln -s $(pwd)/.bash_profile ~/.bash_profile
+ln -s $(pwd)/provision/.bash_profile ~/.bash_profile
 
 # Create the keys file
 touch ${HOME}/dotfiles/.keys.bash || exit
