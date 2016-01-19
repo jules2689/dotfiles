@@ -11,6 +11,8 @@ Install Dotfiles
 Setup a new computer
 ===
 
+It is not required to download this repo before running this command. It is meant to be run on a fresh install of Mac OS X.
+
 `bash <(curl -s https://raw.githubusercontent.com/jules2689/dotfiles/master/download.sh)`
 
 This command will download the `download.sh` file. This will make sure that XCode command line tools are installed, then clone this repo. After cloning, it will run `setup.sh`
