@@ -7,6 +7,11 @@ install_homebrew() {
   bash provision/brew.sh
 }
 
+install_crontab() {
+  echo "Installing Crontab."
+  bash provision/crontab.sh
+}
+
 install_ssh() {
   if [[ -a ~/.ssh/id_rsa ]]; then
     success "It looks like SSH keys are already setup."
@@ -59,6 +64,7 @@ main() {
   add_phase install_homebrew "Install Homebrew & Packages"
   add_phase install_ssh      "Install SSH"
   add_phase install_ruby     "Install Ruby"
+  add_phase install_crontab  "Install Crontab"
   add_phase install_script   "Run Install Script for Dotfile"
 
   print_setup
