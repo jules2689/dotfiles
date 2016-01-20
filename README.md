@@ -66,8 +66,9 @@ This command will download the `download.sh` file. This will make sure that XCod
  - skype 
  - steam
 
-### TODO
+### Git Restore
 
- - Experiment with auto-installing licenses and signins using eJSON
- - ABC the above lists
- - Better output and finalize with a list of TODOs after these scripts run
+ - Under `support` there is a ruby script that will backup a JSON representation of the repo structure.
+ - Running `ruby git_backup.rb [BACKUP_PATH]` will back up the JSON to that path
+ - This is setup in a cron job
+ - To restore run `ruby git_backup.rb restore [PATH_TO_JSON]`. This will create all directories and clone all the repos.
