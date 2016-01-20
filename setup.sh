@@ -47,7 +47,7 @@ print_finalization() {
   echo -e "\x1b[36m${vert}\x1b[0m How to finalize the installation"
   echo -e "\x1b[36m${vert}\x1b[0m ================================="
   echo -e "\x1b[36m${vert}\x1b[0m 1. A public SSH key was copied to the clipboard, add it to Github."
-  echo -e "\x1b[36m${vert}\x1b[0m 2. Google Drive and Dropbox should be signed in."
+  echo -e "\x1b[36m${vert}\x1b[0m 2. Sign into Google Drive and Dropbox."
   echo -e "\x1b[36m${vert}\x1b[0m 3. 1Password should be setup with the vault on Dropbox."
   echo -e "\x1b[36m${vert}\x1b[0m 4. Sign into Chrome, Spotify, Slack, Xcode."
   echo -e "\x1b[36m${vert}\x1b[0m 5. Download WriteApp from Mac App Store, point it to Google Drive"
