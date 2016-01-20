@@ -10,7 +10,7 @@ fi
 brew tap caskroom/cask
 
 # Install Brew Packages
-for pkg in brew-cask gnupg gnupg2 gcc wget cmake mercurial subversion redis postgresql python mysql packer phantomjs node imagemagick fswatch go; do
+for pkg in brew-cask cmake fswatch gcc gnupg gnupg2 go imagemagick mercurial mysql node packer phantomjs postgresql python redis subversion wget; do
   if brew list -1 | grep -q "^${pkg}\$"; then
     echo "Package '$pkg' is already installed"
   else
@@ -19,7 +19,7 @@ for pkg in brew-cask gnupg gnupg2 gcc wget cmake mercurial subversion redis post
 done
 
 # Install Brew Casks
-for pkg in java google-chrome vmware-fusion spotify 1password adium sublime-text flux google-drive dropbox omnigraffle slack sketch skype steam; do
+for pkg in 1password adium dropbox flux google-chrome google-drive java sketch skype slack spotify steam sublime-text vmware-fusion; do
   if brew cask info $pkg | grep -q "Not installed"; then
     brew cask install --appdir="/Applications" $pkg
   else
