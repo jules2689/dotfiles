@@ -36,11 +36,9 @@ if [ -f ${HOME}/.keys.bash ]; then
 fi
 
 # Git Completion Helpers
+echo "Installing Git Completion"
 cp support/git_completion.sh ~/.git-completion.bash
-chmod +x ~/.git-completion.bash
-
-# Source the bash profile
-source ~/.bash_profile
 
 # Copy over SSH Config
+echo "Restoring SSH Config"
 cp support/ssh_config ~/.ssh/config

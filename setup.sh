@@ -1,105 +1,21 @@
 #!/bin/bash
-
 set -euo pipefail
-​
-PHASES=()
-​
-add_phase() {
-  PHASES+=("$1")
-  read -r "PHASE_NAME_$1" <<< "$2"
-}
-​
-name_of_phase() {
-  local namevar
-  namevar="PHASE_NAME_${phase}"
-  echo "${!namevar}"
-}
-​
-c_tl=┏
-c_bl=┗
-#c_br=┛
-#c_tr=┓
-horz=━
-vert=┃
-​
-print_title() {
-  local printing written width diff s
-  printing="${c_tl}${horz}${horz} $1/$2: $3 "
-  width="$(tput cols)"
-  written="${#printing}"
-  ((diff = width - written))
-  s="$(printf "%-${diff}s" "${horz}")"
-  s="${s// /${horz}}"
-​
-  echo -e "\x1b[36m${c_tl}${horz}${horz} \x1b[35m$1/$2: $3 \x1b[36m${s}\x1b[0m"
-}
-​
-print_footer() {
-  local width diff s
-  width="$(tput cols)"
-  ((diff = width - 1))
-  s="$(printf "%-${diff}s" "${horz}")"
-  s="${s// /${horz}}"
-​
-  echo -e "\x1b[36m${c_bl}${s}\x1b[0m"
-}
-​
-run_phases() {
-  local name current max
-​
-  current=1
-  max=${#PHASES[@]}
-​
-  for phase in ${PHASES[*]}; do
-    name="$(name_of_phase "${phase}")"
-    print_title "${current}" "${max}" "${name}"
-​
-    # indent both stdout and stderr, but make the stderr indentation red instead of cyan.
-    {
-      {
-        {
-          ${phase} 8>&2 2>&3 | sed "s/^/\x1b[36m${vert}\x1b[0m /"; 
-        } 3>&1 1>&2 | sed "s/^/\x1b[31m${vert}\x1b[0m /"
-      } 4>&1 1>&2 | sed "s/^/\x1b[34m${vert}\x1b[0m /"
-    } 7>&1 1>&2 | sed "s/^/\x1b[32m${vert}\x1b[0m /"
-​
-    print_footer
-    ((current += 1))
-  done
-}
-​
-success() {
-  >&7 echo -e "\x1b[32m✓\x1b[0m $1"
-}
-​
-default_clone_path="${HOME}/src/github.com/shopify/shopify"
-​
-prompt() {
-  local path
-  >&4 echo -e "\x1b[34m?\x1b[0m $1"
-  sync
-  2>&8 read -p $'\x1b[34m'${vert}$' > \x1b[0m\x1b[s\x1b[33m' -r path
-  if [[ "${path}" == "" ]]; then
-    path="${default_clone_path}"
-    >&8 echo -e "\x1b[A\x1b[u\x1b[33m${default_clone_path}"
-  fi
-  echo -en "\x1b[0m"
-  answer=$path
-}
-​
+
+source support/bash_output.sh
+
 install_homebrew() {
-  if [[ -d /usr/local/Cellar ]]; then
-    success "It looks like homebrew is already installed."
-    return
-  fi
-  echo "Downloading and running homebrew installer..."
   bash provision/brew.sh
 }
-​
+
 install_ssh() {
+  if [[ -a ~/.ssh/id_rsa ]]; then
+    success "It looks like SSH keys are already setup."
+    return
+  fi
+  echo "Generating SSH Keys."
   bash provision/ssh.sh
 }
-​
+
 install_ruby() {
   if [ $(which ruby) != '/usr/bin/ruby' ]; then
     success "It looks like Ruby is already setup."
@@ -111,15 +27,42 @@ install_ruby() {
 }
 
 install_script() {
-  ~/Development/personal/other/dotfiles/install.sh
+  echo "Running Dotfiles setup."
+  bash install.sh
 }
-​
+
+print_setup() {
+  print_header
+  echo -e "\x1b[36m${vert}\x1b[0m  ____       _   _   _                              ____                            _              "
+  echo -e "\x1b[36m${vert}\x1b[0m / ___|  ___| |_| |_(_)_ __   __ _   _   _ _ __    / ___|___  _ __ ___  _ __  _   _| |_ ___ _ __   "
+  echo -e "\x1b[36m${vert}\x1b[0m \___ \ / _ | __| __| | '_ \ / _' | | | | | '_ \  | |   / _ \| '_ ' _ \| '_ \| | | | __/ _ | '__|  "
+  echo -e "\x1b[36m${vert}\x1b[0m  ___) |  __| |_| |_| | | | | (_| | | |_| | |_) | | |__| (_) | | | | | | |_) | |_| | ||  __| |     "
+  echo -e "\x1b[36m${vert}\x1b[0m |____/ \___|\__|\__|_|_| |_|\__, |  \__,_| .__/   \____\___/|_| |_| |_| .__/ \__,_|\__\___|_|     "
+  echo -e "\x1b[36m${vert}\x1b[0m                             |___/        |_|                          |_|                         "
+  print_footer
+}
+
+print_finalization() {
+  print_header
+  echo -e "\x1b[36m${vert}\x1b[0m How to finalize the installation"
+  echo -e "\x1b[36m${vert}\x1b[0m ================================="
+  echo -e "\x1b[36m${vert}\x1b[0m 1. A public SSH key was copied to the clipboard, add it to Github."
+  echo -e "\x1b[36m${vert}\x1b[0m 2. Google Drive and Dropbox should be signed in."
+  echo -e "\x1b[36m${vert}\x1b[0m 3. 1Password should be setup with the vault on Dropbox."
+  echo -e "\x1b[36m${vert}\x1b[0m 4. Sign into Chrome, Spotify, Slack, Xcode."
+  echo -e "\x1b[36m${vert}\x1b[0m 5. Download WriteApp from Mac App Store, point it to Google Drive"
+  echo -e "\x1b[36m${vert}\x1b[0m 6. Download GPG Keychain, set it up."
+  print_footer
+}
+
 main() {
-  add_phase install_homebrew "Install Homebrew"
+  add_phase install_homebrew "Install Homebrew & Packages"
   add_phase install_ssh      "Install SSH"
   add_phase install_ruby     "Install Ruby"
   add_phase install_script   "Run Install Script for Dotfile"
-​
+
+  print_setup
   run_phases
+  print_finalization
 }
 main "$@"
