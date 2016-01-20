@@ -57,6 +57,7 @@ print_finalization() {
   echo -e "\x1b[36m${vert}\x1b[0m 4. Sign into Chrome, Spotify, Slack, Xcode."
   echo -e "\x1b[36m${vert}\x1b[0m 5. Download WriteApp from Mac App Store, point it to Google Drive"
   echo -e "\x1b[36m${vert}\x1b[0m 6. Download GPG Keychain, set it up."
+  echo -e "\x1b[36m${vert}\x1b[0m 7. Restore Git repos from Dropbox > Backup > repo_list.json."
   print_footer
 }
 
