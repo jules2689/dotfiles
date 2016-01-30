@@ -31,9 +31,4 @@ alias postgrestop=postgresstop
 alias stoppostgres=postgresstop
 alias stopostgres=postgresstop
 
-#Ruby and Rails
-alias bx="bundle exec"
-alias r="rake"
-alias bxr="bundle exec rake"
-
 alias web-images='function _webimages(){ echo "Compressing $1 files"; find *.$1 | xargs -I {} -n 1 convert {} -quality 75 -resize 800x {}; };_webimages'

@@ -36,6 +36,11 @@ install_script() {
   bash install.sh
 }
 
+install_various() {
+  echo "Finalizing computr setup."
+  bash install.sh
+}
+
 print_setup() {
   print_header
   echo -e "\x1b[36m${vert}\x1b[0m  ____       _   _   _                              ____                            _              "
@@ -67,6 +72,7 @@ main() {
   add_phase install_ruby     "Install Ruby"
   add_phase install_crontab  "Install Crontab"
   add_phase install_script   "Run Install Script for Dotfile"
+  add_phase install_various  "Finalize installation"
 
   print_setup
   run_phases
