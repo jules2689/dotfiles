@@ -38,7 +38,7 @@ install_script() {
 
 install_various() {
   echo "Finalizing computr setup."
-  bash install.sh
+  bash various.sh
 }
 
 print_setup() {
