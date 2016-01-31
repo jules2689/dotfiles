@@ -16,3 +16,4 @@ export JAVA_HOME=$(/usr/libexec/java_home)
 
 eval "$(ssh-agent -s)" > /dev/null 2>&1
 ssh-add ~/.ssh/id_rsa > /dev/null 2>&1
+source /Users/juliannadeau/.env.sh
