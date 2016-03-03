@@ -24,7 +24,7 @@ for pkg in brew-cask cmake fswatch gcc gnupg gnupg2 go imagemagick mercurial mys
 done
 
 # Install Brew Casks
-for pkg in 1password adium charles dash dropbox flux google-chrome google-drive heroku-toolbelt java karabiner sketch skype slack spotify steam sublime-text vmware-fusion; do
+for pkg in 1password adium charles dash dropbox flux google-chrome google-drive heroku-toolbelt java karabiner licecap sketch skype slack spotify steam sublime-text vmware-fusion; do
   if brew cask info $pkg | grep -q "Not installed"; then
     echo "Brew Cask: Installing '$pkg'"
     brew cask install --appdir="/Applications" $pkg 1>/dev/null
