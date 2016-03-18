@@ -11,8 +11,9 @@ install_mas_apps() {
   bash provision/mas.sh
 }
 
-restore_iterm() {
-  cp provision/com.googlecode.iterm2.plist ~/Library/Preferences/com.googlecode.iterm2.plist
+restore_preferences() {
+  cp provision/preferences/com.googlecode.iterm2.plist ~/Library/Preferences/com.googlecode.iterm2.plist
+  cp provision/preferences/Preferences.sublime-settings ~/Library/Application\ Support/Sublime\ Text\ 2/Packages/User/Preferences.sublime-settings
 }
 
 install_crontab() {
@@ -75,14 +76,14 @@ print_finalization() {
 }
 
 main() {
-  add_phase install_homebrew "Install Homebrew & Packages"
-  add_phase install_mas_apps "Install Mac App Store Apps"
-  add_phase restore_iterm    "Restore iTerm Settings"
-  add_phase install_ssh      "Install SSH"
-  add_phase install_ruby     "Install Ruby"
-  add_phase install_crontab  "Install Crontab"
-  add_phase install_script   "Run Install Script for Dotfile"
-  add_phase install_various  "Finalize installation"
+  add_phase install_homebrew      "Install Homebrew & Packages"
+  add_phase install_mas_apps      "Install Mac App Store Apps"
+  add_phase restore_preferences   "Restore App Settings"
+  add_phase install_ssh           "Install SSH"
+  add_phase install_ruby          "Install Ruby"
+  add_phase install_crontab       "Install Crontab"
+  add_phase install_script        "Run Install Script for Dotfile"
+  add_phase install_various       "Finalize installation"
 
   print_setup
   run_phases
