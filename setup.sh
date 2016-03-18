@@ -7,6 +7,14 @@ install_homebrew() {
   bash provision/brew.sh
 }
 
+install_mas_apps() {
+  bash provision/mas.sh
+}
+
+restore_iterm() {
+  cp provision/com.googlecode.iterm2.plist ~/Library/Preferences/com.googlecode.iterm2.plist
+}
+
 install_crontab() {
   echo "Installing Crontab."
   bash provision/crontab.sh
@@ -68,6 +76,8 @@ print_finalization() {
 
 main() {
   add_phase install_homebrew "Install Homebrew & Packages"
+  add_phase install_mas_apps "Install Mac App Store Apps"
+  add_phase restore_iterm    "Restore iTerm Settings"
   add_phase install_ssh      "Install SSH"
   add_phase install_ruby     "Install Ruby"
   add_phase install_crontab  "Install Crontab"

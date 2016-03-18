@@ -13,7 +13,18 @@ export PATH="~/bin:$PATH"
 export PATH="/usr/local/sbin:$PATH"
 
 export JAVA_HOME=$(/usr/libexec/java_home)
+export ANDROID_HOME="/usr/local/opt/android-sdk"
+export GOPATH="$HOME/golang"
+export PATH="$PATH:$GOPATH/bin"
 
+# SSH Identity
 eval "$(ssh-agent -s)" > /dev/null 2>&1
 ssh-add ~/.ssh/id_rsa > /dev/null 2>&1
-source /Users/juliannadeau/.env.sh
+
+[ -f ~/.env.sh ] && source ~/.env.sh
+
+# Added by dev
+[ -f /opt/dev/dev.sh ] && source /opt/dev/dev.sh
+[ -f /usr/local/share/chruby/chruby.sh ] && source /usr/local/share/chruby/chruby.sh
+[ -f /usr/local/share/chruby/auto.sh ] && source /usr/local/share/chruby/auto.sh
+RUBIES+=(/usr/local/Cellar/shopify-ruby/*)
