@@ -1,9 +1,6 @@
 #NGrok
 alias tunnel='function _tunnel(){ /Users/juliannadeau/ngrok/bin/ngrok -subdomain="$1" -config=/Users/juliannadeau/ngrok/bin/config.txt "$2"; };_tunnel'
 
-#Ops
-alias knife="BUNDLE_GEMFILE=/Users/juliannadeau/.chef/Gemfile bundle exec knife"
-
 #Code Directories
 alias cdg="cd ~/Development"
 alias cdgs="cd ~/Development/shopify"

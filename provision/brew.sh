@@ -12,6 +12,7 @@ fi
 # Tap Cask
 echo "Brew Cask: Tapping caskroom/cask"
 brew tap caskroom/cask 1>/dev/null
+brew tap caskroom/versions 1>/dev/null
 
 packages=(
   argon/mas/mas
@@ -64,7 +65,7 @@ packages=(
   slack
   spotify
   steam
-  sublime-text
+  sublime-text3
   vmware-fusion
 )
 
