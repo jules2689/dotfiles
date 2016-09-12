@@ -27,44 +27,9 @@ This command will download the `download.sh` file. This will make sure that XCod
 4. Create a `.ssh` directory and generates a private/public keypair. This also copies the public key to the clipboard.
 5. Runs `install.sh` to setup bash profiles
 
-### Brew Packages
+### Brew Packages & Casks
 
-  - brew-cask 
-  - gnupg 
-  - gnupg2 
-  - gcc 
-  - wget 
-  - cmake 
-  - mercurial 
-  - subversion 
-  - redis 
-  - postgresql 
-  - python 
-  - mysql 
-  - packer 
-  - phantomjs 
-  - node 
-  - imagemagick 
-  - fswatch 
-  - go
-
-### Brew Casks
-
- - java 
- - google-chrome 
- - vmware-fusion
- - spotify 
- - 1password 
- - adium 
- - sublime-text 
- - flux 
- - google-drive 
- - dropbox 
- - omnigraffle 
- - slack 
- - sketch 
- - skype 
- - steam
+This will install a number of brew and cask packages listed [here](https://github.com/jules2689/dotfiles/blob/master/provision/brew.sh)
 
 ### Git Restore
 
