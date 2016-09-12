@@ -29,6 +29,7 @@ packages=(
   imagemagick
   mercurial
   mysql
+  neovim/neovim/neovim
   node
   packer
   phantomjs
