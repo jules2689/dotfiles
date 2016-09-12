@@ -1,7 +1,6 @@
-source /usr/local/share/chruby/chruby.sh
-source /usr/local/share/chruby/auto.sh
+source /opt/dev/dev.sh
 
-chruby ruby-2.3.1
+chruby 2.3.1
 
 if [ ! $(gem list -i rubocop) ]; then
   gem install rubocop

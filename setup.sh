@@ -12,8 +12,8 @@ install_mas_apps() {
 }
 
 restore_preferences() {
-  cp provision/preferences/com.googlecode.iterm2.plist ~/Library/Preferences/com.googlecode.iterm2.plist
-  cp provision/preferences/Preferences.sublime-settings ~/Library/Application\ Support/Sublime\ Text/Packages/User/Preferences.sublime-settings
+  ln -snf provision/preferences/com.googlecode.iterm2.plist ~/Library/Preferences/com.googlecode.iterm2.plist
+  ln -snf provision/preferences/Preferences.sublime-settings ~/Library/Application\ Support/Sublime\ Text\ 3/Packages/User/Preferences.sublime-settings
 }
 
 install_crontab() {
@@ -22,21 +22,17 @@ install_crontab() {
 }
 
 install_ssh() {
-  if [[ -a ~/.ssh/id_rsa ]]; then
-    success "It looks like SSH keys are already setup."
-    return
-  fi
   echo "Generating SSH Keys."
   bash provision/ssh.sh
 }
 
-install_ruby() {
-  if [ $(which ruby) != '/usr/bin/ruby' ]; then
-    success "It looks like Ruby is already setup."
-    return
-  fi
+install_dev() {
+  echo "Setting up Dev."
+  bash provision/dev.sh
+}
 
-  echo "Installing Ruby..."
+install_ruby() {
+  echo "Setting up Ruby."
   bash provision/ruby.sh
 }
 
@@ -47,7 +43,7 @@ install_script() {
 
 install_various() {
   echo "Finalizing computr setup."
-  bash various.sh
+  bash provision/various.sh
 }
 
 print_setup() {
@@ -65,6 +61,7 @@ print_finalization() {
   print_header
   echo -e "\x1b[36m${vert}\x1b[0m How to finalize the installation"
   echo -e "\x1b[36m${vert}\x1b[0m ================================="
+  echo -e "\x1b[36m${vert}\x1b[0m Not all instructions may apply."
   echo -e "\x1b[36m${vert}\x1b[0m 1. A public SSH key was copied to the clipboard, add it to Github."
   echo -e "\x1b[36m${vert}\x1b[0m 2. Sign into Google Drive and Dropbox."
   echo -e "\x1b[36m${vert}\x1b[0m 3. 1Password should be setup with the vault on Dropbox."
@@ -80,6 +77,7 @@ main() {
   add_phase install_mas_apps      "Install Mac App Store Apps"
   add_phase restore_preferences   "Restore App Settings"
   add_phase install_ssh           "Install SSH"
+  add_phase install_dev           "Install Dev"
   add_phase install_ruby          "Install Ruby"
   add_phase install_crontab       "Install Crontab"
   add_phase install_script        "Run Install Script for Dotfile"

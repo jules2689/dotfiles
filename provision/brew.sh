@@ -10,13 +10,16 @@ else
 fi
 
 # Tap Cask
-echo "Brew Cask: Tapping caskroom/cask"
-brew tap caskroom/cask 1>/dev/null
-brew tap caskroom/versions 1>/dev/null
+if brew tap | grep -q caskroom; then
+  echo "Brew cask already setup"
+else
+  echo "Brew Cask: Tapping caskroom/cask"
+  brew tap caskroom/cask 1>/dev/null
+  brew tap caskroom/versions 1>/dev/null
+fi
 
 packages=(
   argon/mas/mas
-  brew-cask
   cmake
   fswatch
   gcc
@@ -36,45 +39,48 @@ packages=(
   wget
 )
 
-# Install Brew Packages
-for pkg in $packages; do
-  if brew list -1 | grep -q "^${pkg}\$"; then
-    echo "Brew: Package '$pkg' is already installed"
-  else
+brew_list=$(brew list -1)
+for pkg in "${packages[@]}"
+do
+  actual_package_name=${pkg##*\/}
+  if [[ ! ($brew_list =~ "$actual_package_name") ]]; then
     echo "Brew: Installing '$pkg'"
     brew install $pkg 1>/dev/null
   fi
 done
 
-packages=(
+cask_packages=(
   1password
   adium
   charles
   dash
+  docker
   dropbox
   flux
   google-chrome
   google-drive
-  heroku-toolbelt
+  gpgtools
   iterm2
   java
   karabiner
   licecap
+  little-snitch
+  sequel-pro
   sketch
   skype
   slack
   spotify
   steam
-  sublime-text3
+  sublime-text
+  telegram
   vmware-fusion
 )
 
-# Install Brew Casks
-for pkg in $packages; do
-  if brew cask info $pkg | grep -q "Not installed"; then
+cask_brew_list=$(brew cask list -1)
+for pkg in "${cask_packages[@]}"
+do
+  if [[ !($cask_brew_list =~ "$pkg") ]]; then
     echo "Brew Cask: Installing '$pkg'"
     brew cask install --appdir="/Applications" $pkg 1>/dev/null
-  else
-    echo "Brew Cask: Package '$pkg' is already installed"
   fi
 done
