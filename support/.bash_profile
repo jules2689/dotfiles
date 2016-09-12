@@ -34,8 +34,6 @@ else
   eval $(gpg-agent --daemon --write-env-file ~/.gnupg/.gpg-agent-info)
 fi
 
-[ -f ~/.env.sh ] && source ~/.env.sh
-
 # Added by dev
 [ -f /opt/dev/dev.sh ] && source /opt/dev/dev.sh
 [ -f /usr/local/share/chruby/chruby.sh ] && source /usr/local/share/chruby/chruby.sh
