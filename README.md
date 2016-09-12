@@ -23,7 +23,7 @@ This command will download the `download.sh` file. This will make sure that XCod
 
 1. Will install brew and brew cask. 
 2. Will install packages and casks
-3. Will install Rbenv and Ruby 2.2.2
+3. Will install Chruby, Ruby Install, and Ruby 2.3.1
 4. Create a `.ssh` directory and generates a private/public keypair. This also copies the public key to the clipboard.
 5. Runs `install.sh` to setup bash profiles
 

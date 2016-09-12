@@ -1,6 +1,6 @@
 source ~/.profile
 source ~/dotfiles/.github.bash
-source ~/dotfiles/.rbenv.bash
+source ~/dotfiles/.ruby.bash
 source ~/dotfiles/.aliases.bash
 source ~/dotfiles/.keys.bash
 

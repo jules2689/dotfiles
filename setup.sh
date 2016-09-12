@@ -37,7 +37,7 @@ install_ruby() {
   fi
 
   echo "Installing Ruby..."
-  bash provision/rbenv.sh
+  bash provision/ruby.sh
 }
 
 install_script() {

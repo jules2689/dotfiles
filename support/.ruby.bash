@@ -1,8 +1,7 @@
-export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init -)"
+source /usr/local/share/chruby/chruby.sh
+source /usr/local/share/chruby/auto.sh
 
-rbenv install 2.3.0 -s
-rbenv global 2.3.0
+chruby ruby-2.3.1
 
 if [ ! $(gem list -i rubocop) ]; then
   gem install rubocop
