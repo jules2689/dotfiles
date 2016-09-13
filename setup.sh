@@ -13,6 +13,7 @@ install_mas_apps() {
 
 restore_preferences() {
   cp provision/preferences/com.googlecode.iterm2.plist ~/Library/Preferences/com.googlecode.iterm2.plist
+  defaults read com.googlecode.iterm2
   cp provision/preferences/Preferences.sublime-settings ~/Library/Application\ Support/Sublime\ Text\ 3/Packages/User/Preferences.sublime-settings
 }
 
