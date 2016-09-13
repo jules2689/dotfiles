@@ -16,6 +16,11 @@ bash_profile() {
   ln -s $(pwd)/support/.bash_profile ~/.bash_profile
 }
 
+clean_dotfiles() {
+  rm -r ~/dotfiles
+  mkdir ~/dotfiles
+}
+
 symlink_dotfiles() {
   pushd support
   shopt -s dotglob
@@ -37,11 +42,6 @@ vim() {
   ln -sf ~/.vim ~/.config/nvim
 
   bash support/vim_plugins.sh
-}
-
-clean_dotfiles() {
-  rm -r ~/dotfiles
-  mkdir ~/dotfiles
 }
 
 restore_secrets_keys() {
@@ -75,8 +75,8 @@ main() {
   add_phase backup_secret_keys    "Setup/Backup Secret Keys"
   add_phase bash_profile          "Setup Bash Profile"
   add_phase vim                   "Setup Vim"
-  add_phase symlink_dotfiles      "Symlink dotfiles to system"
   add_phase clean_dotfiles        "Clean dotfiles"
+  add_phase symlink_dotfiles      "Symlink dotfiles to system"
   add_phase ssh_config            "Setup SSH Config"
   add_phase git_completion        "Setup Git Completion"
   add_phase restore_secrets_keys   "Restore Secrets Keys"

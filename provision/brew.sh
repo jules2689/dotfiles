@@ -74,6 +74,7 @@ cask_packages=(
   steam
   sublime-text
   telegram
+  viscosity
   vmware-fusion
 )
 
