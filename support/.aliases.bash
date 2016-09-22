@@ -1,13 +1,3 @@
-#NGrok
-alias tunnel='function _tunnel(){ /Users/juliannadeau/ngrok/bin/ngrok -subdomain="$1" -config=/Users/juliannadeau/ngrok/bin/config.txt "$2"; };_tunnel'
-
-#Code Directories
-alias cdg="cd ~/Development"
-alias cdgs="cd ~/Development/shopify"
-alias cdv="cd ~/Development/shopify/rails/vagrant"
-alias dc=cd
-alias bk="cd ../../../"
-
 #Mac Stuff
 alias showFiles='defaults write com.apple.finder AppleShowAllFiles YES; killall Finder /System/Library/CoreServices/Finder.app'
 alias hideFiles='defaults write com.apple.finder AppleShowAllFiles NO; killall Finder /System/Library/CoreServices/Finder.app'
