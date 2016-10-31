@@ -12,12 +12,12 @@ backup_secret_keys() {
 }
 
 bash_profile() {
-  rm ~/.bash_profile
+  rm -rf ~/.bash_profile
   ln -s $(pwd)/support/.bash_profile ~/.bash_profile
 }
 
 clean_dotfiles() {
-  rm -r ~/dotfiles
+  rm -rf ~/dotfiles
   mkdir ~/dotfiles
 }
 

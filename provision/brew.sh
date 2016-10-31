@@ -36,6 +36,7 @@ packages=(
   postgresql
   python
   redis
+  ruby-install
   subversion
   wget
 )
