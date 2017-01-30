@@ -13,12 +13,6 @@ WHITE="\[\033[0;37m\]"
 
 PS1="$RED\w$YELLOW\$(parse_git_branch)$WHITE ➜ "
 
-alias gl='git log --graph --pretty=format:'\''%Cred%h%Creset %Cblue%an:%Creset %s - %C(yellow)%d%Creset %Cgreen(%cr)%Creset'\'' --abbrev-commit --date=relative'
-alias sub="git submodule update --init --recursive"
-alias gcp="git cherry-pick"
-alias gc="git checkout"
-
-
 if [ -f ~/.git-completion.bash ]; then
   . ~/.git-completion.bash
 fi
