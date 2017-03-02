@@ -1,4 +1,3 @@
-source ~/.profile
 source ~/dotfiles/.github.bash
 source ~/dotfiles/.ruby.bash
 source ~/dotfiles/.aliases.bash
