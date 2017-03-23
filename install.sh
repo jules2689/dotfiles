@@ -72,13 +72,13 @@ print_setup() {
 }
 
 main() {
-  add_phase backup_secret_keys    "Setup/Backup Secret Keys"
-  add_phase bash_profile          "Setup Bash Profile"
-  add_phase vim                   "Setup Vim"
-  add_phase clean_dotfiles        "Clean dotfiles"
-  add_phase symlink_dotfiles      "Symlink dotfiles to system"
-  add_phase ssh_config            "Setup SSH Config"
-  add_phase git_completion        "Setup Git Completion"
+  add_phase backup_secret_keys     "Setup/Backup Secret Keys"
+  add_phase bash_profile           "Setup Bash Profile"
+  add_phase vim                    "Setup Vim"
+  add_phase clean_dotfiles         "Clean dotfiles"
+  add_phase symlink_dotfiles       "Symlink dotfiles to system"
+  add_phase ssh_config             "Setup SSH Config"
+  add_phase git_completion         "Setup Git Completion"
   add_phase restore_secrets_keys   "Restore Secrets Keys"
 
   print_setup

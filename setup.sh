@@ -7,6 +7,11 @@ install_homebrew() {
   bash provision/brew.sh
 }
 
+log_into_dropbox() {
+  echo "Sign into Dropbox to synchronize 1Password. Enter anything to continue installation"
+  read
+}
+
 install_mas_apps() {
   bash provision/mas.sh
 }
@@ -14,17 +19,11 @@ install_mas_apps() {
 restore_preferences() {
   cp provision/preferences/com.googlecode.iterm2.plist ~/Library/Preferences/com.googlecode.iterm2.plist
   defaults read com.googlecode.iterm2
-  cp provision/preferences/Preferences.sublime-settings ~/Library/Application\ Support/Sublime\ Text\ 3/Packages/User/Preferences.sublime-settings
 }
 
 install_crontab() {
   echo "Installing Crontab."
   bash provision/crontab.sh
-}
-
-install_ssh() {
-  echo "Generating SSH Keys."
-  bash provision/ssh.sh
 }
 
 install_dev() {
@@ -43,8 +42,27 @@ install_script() {
 }
 
 install_various() {
-  echo "Finalizing computr setup."
+  echo "Finalizing computer setup."
+  ln -sf "$(pwd)"/support/.mackup.cfg ~/.mackup.cfg
   bash provision/various.sh
+}
+
+restore_ssh_gpg() {
+  echo "Get the SSH keys from 1Password"
+  echo "Put them in ~/.ssh. Write anything to continue"
+  read
+
+  echo "Get the GPG keys from 1Password"
+  echo "Put the files in ~/Desktop/gpg. Write anything to continue"
+  read
+
+  gpg --import ~/Desktop/gpg/julian-secret-gpg.key
+  gpg --import-ownertrust ~/Desktop/gpg/julian-ownertrust-gpg.txt
+
+  rm -rf ~/Desktop/gpg
+
+  git config --global commit.gpgsign true
+  git config --global user.signingkey CAD41019602B5DC8
 }
 
 print_setup() {
@@ -62,22 +80,17 @@ print_finalization() {
   print_header
   echo -e "\x1b[36m${vert}\x1b[0m How to finalize the installation"
   echo -e "\x1b[36m${vert}\x1b[0m ================================="
-  echo -e "\x1b[36m${vert}\x1b[0m Not all instructions may apply."
-  echo -e "\x1b[36m${vert}\x1b[0m 1. A public SSH key was copied to the clipboard, add it to Github."
-  echo -e "\x1b[36m${vert}\x1b[0m 2. Sign into Google Drive and Dropbox."
-  echo -e "\x1b[36m${vert}\x1b[0m 3. 1Password should be setup with the vault on Dropbox."
-  echo -e "\x1b[36m${vert}\x1b[0m 4. Sign into Chrome, Spotify, Slack, Xcode."
-  echo -e "\x1b[36m${vert}\x1b[0m 5. Download WriteApp from Mac App Store, point it to Google Drive"
-  echo -e "\x1b[36m${vert}\x1b[0m 6. Download GPG Keychain, set it up."
-  echo -e "\x1b[36m${vert}\x1b[0m 7. Restore Git repos from Dropbox > Backup > repo_list.json."
+  echo -e "\x1b[36m${vert}\x1b[0m 1. Sign into Google Drive and Dropbox."
+  echo -e "\x1b[36m${vert}\x1b[0m 2. Sign into Chrome, Spotify, Slack, Xcode."
+  echo -e "\x1b[36m${vert}\x1b[0m 3. Fix the screenshot shortcut in keyboard settings."
   print_footer
 }
 
 main() {
   add_phase install_homebrew      "Install Homebrew & Packages"
+  add_phase log_into_dropbox      "Log into Dropbox"
   add_phase install_mas_apps      "Install Mac App Store Apps"
   add_phase restore_preferences   "Restore App Settings"
-  add_phase install_ssh           "Install SSH"
   add_phase install_dev           "Install Dev"
   add_phase install_ruby          "Install Ruby"
   add_phase install_crontab       "Install Crontab"

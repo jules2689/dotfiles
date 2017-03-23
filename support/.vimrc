@@ -31,6 +31,12 @@ autocmd BufWritePre * :%s/\s\+$//e
 set rnu
 set nu
 
+" Color Scheme
+colorscheme desert
+
 let g:ctrlp_user_command = ['.git/', 'cd %s && git ls-files . -co --exclude-standard']
 " let g:ctrlp_match_func = {'match': 'cpsm#CtrlPMatch'}
+
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 

@@ -19,3 +19,9 @@ alias stoppostgres=postgresstop
 alias stopostgres=postgresstop
 
 alias web-images='function _webimages(){ echo "Compressing $1 files"; find *.$1 | xargs -I {} -n 1 convert {} -quality 75 -resize 800x {}; };_webimages'
+
+backup_gpg() {
+  gpg -a --export julian@jnadeau.ca > julian-public-gpg.key
+  gpg -a --export-secret-keys julian@jnadeau.ca > julian-secret-gpg.key
+  gpg --export-ownertrust > julian-ownertrust-gpg.txt
+}

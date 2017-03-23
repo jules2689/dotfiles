@@ -27,6 +27,7 @@ packages=(
   gnupg2
   go
   imagemagick
+  mackup
   mercurial
   mysql
   neovim/neovim/neovim
