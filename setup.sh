@@ -83,6 +83,7 @@ print_finalization() {
   echo -e "\x1b[36m${vert}\x1b[0m 1. Sign into Google Drive and Dropbox."
   echo -e "\x1b[36m${vert}\x1b[0m 2. Sign into Chrome, Spotify, Slack, Xcode."
   echo -e "\x1b[36m${vert}\x1b[0m 3. Fix the screenshot shortcut in keyboard settings."
+  echo -e "\x1b[36m${vert}\x1b[0m 4. Run `mackup restore`"
   print_footer
 }
 
