@@ -91,6 +91,7 @@ main() {
   add_phase log_into_dropbox      "Log into Dropbox"
   add_phase install_mas_apps      "Install Mac App Store Apps"
   add_phase restore_preferences   "Restore App Settings"
+  add_phase restore_ssh_gpg       "Restore SSH and GPG Keys"
   add_phase install_dev           "Install Dev"
   add_phase install_ruby          "Install Ruby"
   add_phase install_crontab       "Install Crontab"
