@@ -25,3 +25,6 @@ backup_gpg() {
   gpg -a --export-secret-keys julian@jnadeau.ca > julian-secret-gpg.key
   gpg --export-ownertrust > julian-ownertrust-gpg.txt
 }
+
+alias devbundle="export RUBYOPT='-I/Users/juliannadeau/src/github.com/bundler/bundler/lib'"
+alias testit=~/dotfiles/scripts/core_test

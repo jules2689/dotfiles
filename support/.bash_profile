@@ -26,11 +26,12 @@ eval "$(ssh-agent -s)" > /dev/null 2>&1
 ssh-add ~/.ssh/id_rsa > /dev/null 2>&1
 
 # GPG
-if test -f ~/.gnupg/.gpg-agent-info -a -n "$(pgrep gpg-agent)"; then
-  source ~/.gnupg/.gpg-agent-info
+export GPG_TTY=$(tty)
+[ -f ~/.gpg-agent-info ] && source ~/.gpg-agent-info
+if [ -S "${GPG_AGENT_INFO%%:*}" ]; then
   export GPG_AGENT_INFO
 else
-  eval $(gpg-agent --daemon --write-env-file ~/.gnupg/.gpg-agent-info)
+  eval $( gpg-agent --daemon --write-env-file ~/.gpg-agent-info  > /dev/null 2>&1 )
 fi
 
 # Added by dev

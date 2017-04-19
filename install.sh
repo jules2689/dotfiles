@@ -22,6 +22,17 @@ clean_dotfiles() {
 }
 
 symlink_dotfiles() {
+  mkdir -p "${HOME}/dotfiles/scripts/"
+  pushd support/scripts
+  shopt -s dotglob
+  for f in *
+  do
+    echo "Symlinking $f to ${HOME}/dotfiles/scripts/$f"
+    ln -sf "$(pwd)/$f" "${HOME}/dotfiles/scripts/$f"
+  done
+  shopt -u dotglob
+  popd
+
   pushd support
   shopt -s dotglob
   for f in *.*.bash
