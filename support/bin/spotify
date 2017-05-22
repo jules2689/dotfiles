@@ -26,9 +26,13 @@ mappings = {
   'help' => :help
 }
 
-mapping = mappings[ARGV.first]
-if mapping.nil? || mapping == :help
-  Spotify::Api.help(mappings)
+if ARGV.empty?
+  Spotify::Api.status
 else
-  Spotify::Api.send(mapping)
+  mapping = mappings[ARGV.first]
+  if mapping.nil? || mapping == :help
+    Spotify::Api.help(mappings)
+  else
+    Spotify::Api.send(mapping)
+  end
 end
