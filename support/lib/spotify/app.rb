@@ -50,6 +50,10 @@ module Spotify
       oascript('tell application "Spotify" to playpause')
     end
 
+    def self.pause!
+      oascript('tell application "Spotify" to pause')
+    end
+
     def self.play_uri!(uri)
       oascript("tell application \"Spotify\" to play track \"#{uri}\"")
     end

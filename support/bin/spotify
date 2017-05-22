@@ -16,7 +16,8 @@ mappings = {
   'replay' => :replay,
   'rep' => :replay,
   'restart' => :replay,
-  'pause' => :play_pause,
+  'pause' => :pause,
+  'stop' => :pause,
   'play' => :play_pause,
   'p' => :play_pause,
   'play_pause' => :play_pause,
@@ -25,8 +26,9 @@ mappings = {
   'help' => :help
 }
 
-if mapping = mappings[ARGV.first]
-  Spotify::Api.send(mapping)
-else
+mapping = mappings[ARGV.first]
+if mapping.nil? || mapping == :help
   Spotify::Api.help(mappings)
+else
+  Spotify::Api.send(mapping)
 end

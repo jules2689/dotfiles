@@ -75,11 +75,12 @@ module Spotify
         end
 
         arg = args.shift
-        Dex::UI.frame("Searching for #{arg}", timing: false) do
-          play_uri = case arg
-          when 'album', 'artist', 'track', 'song'
-            type = arg == 'song' ? 'track' : arg
-            results = search_and_play(type: arg, query: args.join(' '))
+        type = arg == 'song' ? 'track' : arg
+
+        Dex::UI.frame("Searching for #{type}", timing: false) do
+          play_uri = case type
+          when 'album', 'artist', 'track'
+            results = search_and_play(type: type, query: args.join(' '))
             results.first
           when 'uri'
             args.first
@@ -89,6 +90,18 @@ module Spotify
           sleep 0.05 # Give time for the app to switch otherwise status may be stale
         end
 
+        status
+      end
+
+      doc <<-EOF
+      Pause/stop the current song
+
+      {{bold:Usage:}}
+        {{command:spotify pause}}
+        {{command:spotify stop}}
+      EOF
+      def pause
+        Spotify::App.pause!
         status
       end
 
