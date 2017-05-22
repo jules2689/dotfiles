@@ -1,4 +1,4 @@
-#!/bin/ruby
+#!/usr/bin/ruby --disable-gems
 
 branch = ARGV[0]
 repo = ARGV[1]

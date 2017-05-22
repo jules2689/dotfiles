@@ -33,6 +33,28 @@ symlink_dotfiles() {
   shopt -u dotglob
   popd
 
+  mkdir -p "${HOME}/dotfiles/bin/"
+  pushd support/bin
+  shopt -s dotglob
+  for f in *
+  do
+    echo "Symlinking $f to ${HOME}/dotfiles/bin/$f"
+    ln -sf "$(pwd)/$f" "${HOME}/dotfiles/bin/$f"
+  done
+  shopt -u dotglob
+  popd
+
+  mkdir -p "${HOME}/dotfiles/lib/"
+  pushd support/lib
+  shopt -s dotglob
+  for f in *
+  do
+    echo "Symlinking $f to ${HOME}/dotfiles/lib/$f"
+    ln -sf "$(pwd)/$f" "${HOME}/dotfiles/lib/$f"
+  done
+  shopt -u dotglob
+  popd
+
   pushd support
   shopt -s dotglob
   for f in *.*.bash
