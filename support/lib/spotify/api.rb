@@ -5,7 +5,6 @@ module Spotify
   class Api
     PLAY = "▶"
     STOP = "◼"
-    PAUSE = "═"
 
     SPOTIFY_SEARCH_API = "https://api.spotify.com/v1/search"
 
@@ -116,8 +115,6 @@ module Spotify
 
         time = "#{stat[:position]} / #{stat[:duration]}"
         state_sym = case stat[:state]
-        when 'paused'
-          PAUSE
         when 'playing'
           PLAY
         else
