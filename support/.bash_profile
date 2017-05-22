@@ -11,7 +11,6 @@ export PATH=/usr/local/bin:$PATH
 export PATH="~/bin:$PATH"
 export PATH="/usr/local/sbin:$PATH"
 export PATH="$PATH:/Users/juliannadeau/src/github.com/jules2689/task/bin"
-export PATH="$PATH:/Users/juliannadeau/dotfiles/bin"
 
 export JAVA_HOME=$(/usr/libexec/java_home)
 export ANDROID_HOME="/usr/local/opt/android-sdk"

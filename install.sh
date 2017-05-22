@@ -33,28 +33,6 @@ symlink_dotfiles() {
   shopt -u dotglob
   popd
 
-  mkdir -p "${HOME}/dotfiles/bin/"
-  pushd support/bin
-  shopt -s dotglob
-  for f in *
-  do
-    echo "Symlinking $f to ${HOME}/dotfiles/bin/$f"
-    ln -sf "$(pwd)/$f" "${HOME}/dotfiles/bin/$f"
-  done
-  shopt -u dotglob
-  popd
-
-  mkdir -p "${HOME}/dotfiles/lib/"
-  pushd support/lib
-  shopt -s dotglob
-  for f in *
-  do
-    echo "Symlinking $f to ${HOME}/dotfiles/lib/$f"
-    ln -sf "$(pwd)/$f" "${HOME}/dotfiles/lib/$f"
-  done
-  shopt -u dotglob
-  popd
-
   pushd support
   shopt -s dotglob
   for f in *.*.bash
@@ -75,6 +53,10 @@ vim() {
   ln -sf ~/.vim ~/.config/nvim
 
   bash support/vim_plugins.sh
+}
+
+gems() {
+  gem install spotify_cli
 }
 
 restore_secrets_keys() {
@@ -108,6 +90,7 @@ main() {
   add_phase backup_secret_keys     "Setup/Backup Secret Keys"
   add_phase bash_profile           "Setup Bash Profile"
   add_phase vim                    "Setup Vim"
+  add_phase gems                   "Install Gems"
   add_phase clean_dotfiles         "Clean dotfiles"
   add_phase symlink_dotfiles       "Symlink dotfiles to system"
   add_phase ssh_config             "Setup SSH Config"
