@@ -28,3 +28,4 @@ backup_gpg() {
 
 alias devbundle="export RUBYOPT='-I/Users/juliannadeau/src/github.com/bundler/bundler/lib'"
 alias testit=~/dotfiles/scripts/core_test
+alias s=spotify
