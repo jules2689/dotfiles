@@ -6,18 +6,19 @@ require_relative 'install'
 module Dotfiles
   class Setup < Runner
     class << self
-      def main
+      def call
         @phases = []
 
-        add_phase "Install Homebrew & Packages" { install_homebrew }
-        add_phase "Log into Dropbox" { log_into_dropbox }
-        add_phase "Restore App Settings" { restore_preferences }
-        add_phase "Restore SSH and GPG Keys" { restore_ssh_gpg }
-        add_phase "Install Dev" { install_dev }
-        add_phase "Setup Ruby" { install_ruby }
-        add_phase "Run Install Script for Dotfile" { install_script }
-        add_phase "Finalize installation" { run_various }
+        add_phase("Install Homebrew & Packages") { install_homebrew }
+        add_phase("Log into Dropbox") { log_into_dropbox }
+        add_phase("Restore App Settings") { restore_preferences }
+        add_phase("Restore SSH and GPG Keys") { restore_ssh_gpg }
+        add_phase("Install Dev") { install_dev }
+        add_phase("Setup Ruby") { install_ruby }
+        add_phase("Run Install Script for Dotfiles") { install_script }
+        add_phase("Finalize installation") { run_various }
 
+        CLI::UI::StdoutRouter.enable
         print_setup
         run_phases
         print_finalization
@@ -26,71 +27,70 @@ module Dotfiles
       private
 
       def install_homebrew
-        Dir.chdir(REPO) do
-          system("brew bundle install")
+        Dir.chdir(Dotfiles::REPO) do
+          return if `brew bundle check`.include?('are satisfied')
+          run("brew bundle install")
         end
       end
 
       def log_into_dropbox
         puts "Sign into Dropbox to synchronize 1Password. Enter anything to continue installation"
-        gets
+        # gets
       end
 
       def restore_preferences
         FileUtils.cp(
-          "#{REPO}/provision/preferences/com.googlecode.iterm2.plist",
-          "#{HOME}/Library/Preferences/com.googlecode.iterm2.plist"
+          "#{Dotfiles::REPO}/lib/provision/preferences/com.googlecode.iterm2.plist",
+          "#{Dotfiles::HOME}/Library/Preferences/com.googlecode.iterm2.plist"
         )
-        system("defaults read com.googlecode.iterm2")
       end
 
       def install_dev
+        return if File.exist?('/opt/dev')
         puts "Setting up Dev."
-        system("eval \"$(curl -sS https://dev.shopify.io/up)\"")
+        run("eval \"$(curl -sS https://dev.shopify.io/up)\"")
       end
 
       def install_ruby
         response = Net::HTTP.get_response(URI("https://www.ruby-lang.org/en/downloads/releases/"))
-        ruby = response.body.scan(/Ruby ([\d\.]*?)</).flatten.sort.reverse.take(1)
-        system("ruby-install ruby-#{ruby.strip}")
-        File.write("#{HOME}/.ruby-version", ruby.strip)
+        ruby = response.body.scan(/Ruby ([\d\.]*?)</).flatten.sort.reverse.take(1).first
+        unless File.exist?("/opt/rubies/#{ruby.strip}")
+          CLI::UI::Spinner.spin("Installing Ruby #{ruby}") do
+            run("ruby-install ruby-#{ruby.strip}")
+          end
+        end
+        File.write("#{Dotfiles::HOME}/.ruby-version", ruby.strip)
       end
 
       def install_script
-        Installer.call
+        Install.call
       end
 
       def run_various
-        FileUtils.ln_s "#{REPO}/support/.mackup.cfg", "#{HOME}/.mackup.cfg", force: true
+        FileUtils.ln_s "#{Dotfiles::REPO}/support/.mackup.cfg", "#{Dotfiles::HOME}/.mackup.cfg", force: true
         puts "Setting some default system settings"
-        system("DevToolsSecurity -enable")
+        run("DevToolsSecurity -enable")
       end
 
       def restore_ssh_gpg
-        puts "Get the SSH keys from 1Password"
-        puts "Put them in ~/.ssh. Write anything to continue"
-        gets
+        if File.exist?("#{Dotfiles::HOME}/Desktop/gpg")
+          run("gpg --import #{Dotfiles::HOME}/Desktop/gpg/julian-secret-gpg.key")
+          run("gpg --import-ownertrust #{Dotfiles::HOME}/Desktop/gpg/julian-ownertrust-gpg.txt")
 
-        puts "Get the GPG keys from 1Password"
-        puts "Put the files in ~/Desktop/gpg. Write anything to continue"
-        gets
+          FileUtils.rm_rf "#{Dotfiles::HOME}/Desktop/gpg"
 
-        system("gpg --import #{HOME}/Desktop/gpg/julian-secret-gpg.key")
-        system("gpg --import-ownertrust #{HOME}/Desktop/gpg/julian-ownertrust-gpg.txt")
-
-        FileUtils.rm_rf "#{HOME}/Desktop/gpg"
-
-        system("git config --global commit.gpgsign true")
-        system("git config --global user.signingkey CAD41019602B5DC8") # TODO: GENERIC
+          run("git config --global commit.gpgsign true")
+          run("git config --global user.signingkey CAD41019602B5DC8") # TODO: GENERIC
+        end
       end
 
       def print_setup
-        CLI::UI::Frame.open('') do
+        CLI::UI::Frame.open('', timing: false) do
           puts "  ____       _   _   _                              ____                            _              "
           puts " / ___|  ___| |_| |_(_)_ __   __ _   _   _ _ __    / ___|___  _ __ ___  _ __  _   _| |_ ___ _ __   "
-          puts " \___ \ / _ | __| __| | '_ \ / _' | | | | | '_ \  | |   / _ \| '_ ' _ \| '_ \| | | | __/ _ | '__|  "
+          puts " \\___ \\ / _ | __| __| | '_ \\ / _' | | | | | '_ \\  | |   / _ \\| '_ ' _ \\| '_ \\| | | | __/ _ | '__|  "
           puts "  ___) |  __| |_| |_| | | | | (_| | | |_| | |_) | | |__| (_) | | | | | | |_) | |_| | ||  __| |     "
-          puts " |____/ \___|\__|\__|_|_| |_|\__, |  \__,_| .__/   \____\___/|_| |_| |_| .__/ \__,_|\__\___|_|     "
+          puts " |____/ \\___|\\__|\\__|_|_| |_|\\__, |  \\__,_| .__/   \\____\\___/|_| |_| |_| .__/ \\__,_|\\__\\___|_|     "
           puts "                             |___/        |_|                          |_|                         "
         end
       end
@@ -108,3 +108,5 @@ module Dotfiles
     end
   end
 end
+
+Dotfiles::Setup.call

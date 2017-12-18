@@ -6,5 +6,6 @@ require 'cli/ui'
 require 'fileutils'
 require 'net/http'
 require 'uri'
+require 'open3'
 
 require_relative 'runner'

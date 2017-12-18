@@ -17,77 +17,76 @@ module Dotfiles
         add_phase("Setup Git Completion") { git_completion }         
         add_phase("Restore Secrets Keys") { restore_secrets_keys }   
 
-        print_setup
         run_phases
       end
 
       private
 
       def backup_secret_keys
-        return unless File.exist?(File.join(DOTFILES, ".keys.bash")
+        return unless File.exist?(File.join(DOTFILES, ".keys.bash"))
         puts "Backing up keys"
-        FileUtils.cp "#{DOTFILES}/.keys.bash", "#{HOME}/.keys.bash"
+        FileUtils.cp "#{Dotfiles::DOTFILES}/.keys.bash", "#{Dotfiles::HOME}/.keys.bash"
       end
 
       def bash_profile
-        FileUtils.rm_rf("#{HOME}/.bash_profile")
-        FileUtils.ln_s("#{REPO}/support/.bash_profile", "#{HOME}/.bash_profile")
+        puts "Relinking ~/.bash_profile"
+        FileUtils.ln_s("#{Dotfiles::REPO}/support/.bash_profile", "#{Dotfiles::HOME}/.bash_profile", force: true)
       end
 
       def clean_dotfiles
-        FileUtils.rm_rf("#{HOME}/dotfiles")
-        FileUtils.mkdir("#{HOME}/dotfiles")
+        puts "Remaking ~/dotfiles"
+        FileUtils.rm_rf("#{Dotfiles::HOME}/dotfiles")
+        FileUtils.mkdir("#{Dotfiles::HOME}/dotfiles")
       end
 
       def symlink_dotfiles
-        FileUtils.mkdir_p("#{HOME}/dotfiles/scripts/")
+        FileUtils.mkdir_p("#{Dotfiles::HOME}/dotfiles/scripts/")
 
-        Dir.chdir("#{REPO}/support/scripts") do
+        Dir.chdir("#{Dotfiles::REPO}/lib/support/scripts") do
           Dir.glob('*') do |file|
-            puts "Symlinking #{file} to ${HOME}/dotfiles/scripts/#{file}"
-            FileUtils.ln_s file "${HOME}/dotfiles/scripts/#{File.basename(file)}", force: true
+            puts "Symlinking #{file} to #{Dotfiles::HOME}/dotfiles/scripts/#{file}"
+            FileUtils.ln_s file, "#{Dotfiles::HOME}/dotfiles/scripts/#{File.basename(file)}", force: true
           end
         end
 
-        Dir.chdir("#{REPO}/support") do
+        Dir.chdir("#{Dotfiles::REPO}/lib/support") do
           Dir.glob('*.*.bash') do |file|
-            puts "Symlinking #{file} to ${HOME}/dotfiles/scripts/#{file}"
-            FileUtils.ln_s file "${HOME}/dotfiles/scripts/#{File.basename(file)}", force: true
+            puts "Symlinking #{file} to #{Dotfiles::HOME}/dotfiles/scripts/#{file}"
+            FileUtils.ln_s file, "#{Dotfiles::HOME}/dotfiles/scripts/#{File.basename(file)}", force: true
           end
         end
       end
 
       def vim
-        FileUtils.ln_s "#{REPO}/support/.vim/*". "#{HOME}/.vim", force: true
-        FileUtils.ln_s "#{REPO}/support/.vimrc", "#{HOME}/.vimrc", force: true
-        FileUtils.ln_s "#{REPO}/support/.vimrc", "#{HOME}/.vim/init.vim", force: true
+        FileUtils.ln_s "#{Dotfiles::REPO}/support/.vim/*", "#{Dotfiles::HOME}/.vim", force: true
+        FileUtils.ln_s "#{Dotfiles::REPO}/support/.vimrc", "#{Dotfiles::HOME}/.vimrc", force: true
+        FileUtils.ln_s "#{Dotfiles::REPO}/support/.vimrc", "#{Dotfiles::HOME}/.vim/init.vim", force: true
 
-        FileUtils.mkdir_p("#{HOME}/.config")
-        FileUtils.ln_s "#{HOME}/.vim", "#{HOME}/.config/nvim"
+        FileUtils.mkdir_p("#{Dotfiles::HOME}/.config")
+        FileUtils.ln_s "#{Dotfiles::HOME}/.vim", "#{Dotfiles::HOME}/.config/nvim", force: true
 
-        # TODO
-        # bash support/vim_plugins.sh
+        run("bash #{Dotfiles::REPO}/lib/support/vim_plugins.sh")
       end
 
       def restore_secrets_keys
-        FileUtils.touch "#{HOME}/dotfiles/.keys.bash" rescue nil
+        FileUtils.touch "#{Dotfiles::HOME}/dotfiles/.keys.bash" rescue nil
 
         # Restore any backed up keys
-        if File.exist?("#{HOME}/.keys.bash")
+        if File.exist?("#{Dotfiles::HOME}/.keys.bash")
           puts "Restoring keys and removing backup"
-          FileUtils.cp "#{HOME}/.keys.bash", "#{HOME}/dotfiles/.keys.bash"
-          FileUtils.rm "#{HOME}/.keys.bash"
+          FileUtils.cp "#{Dotfiles::HOME}/.keys.bash", "#{Dotfiles::HOME}/dotfiles/.keys.bash"
+          FileUtils.rm "#{Dotfiles::HOME}/.keys.bash"
         end
       end
 
       def git_completion
         puts "Installing Git Completion"
-        FileUtils.cp "#{REPO}/support/git_completion.sh", "#{HOME}/.git-completion.bash"
+        FileUtils.cp "#{Dotfiles::REPO}/lib/support/git_completion.sh", "#{Dotfiles::HOME}/.git-completion.bash"
       end
 
       def ssh_config
         puts "Restoring SSH Config"
-        FileUtils.cp "#{REPO}/support/ssh_config", "#{HOME}/.ssh/config"
+        FileUtils.cp "#{Dotfiles::REPO}/lib/support/ssh_config", "#{Dotfiles::HOME}/.ssh/config"
       end
     end
   end
