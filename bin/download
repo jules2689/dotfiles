@@ -2,6 +2,19 @@
 
 export TERM=xterm-256color
 
+# Install Xcode Command Line Tools
+xcode-select -p
+if [[ $? -ne 0 ]]; then
+  echo "Installing Command Line Tools"
+  # Create the placeholder file that's checked by CLI updates' .dist code in Apple's SUS catalog
+  touch /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
+  # find the CLI Tools update
+  PROD=$(softwareupdate -l | grep "\*.*Command Line" | head -n 1 | awk -F"*" '{print $2}' | sed -e 's/^ *//' | tr -d '\n')
+  softwareupdate -i "$PROD" -v # install it
+else
+  echo "Command Line Tools already installed"
+fi
+
 cd $(mktemp -d)
 git clone https://github.com/jules2689/dotfiles.git .
 bin/install
