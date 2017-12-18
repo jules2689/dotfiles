@@ -10,6 +10,8 @@
 	<integer>0</integer>
 	<key>AppleSmoothFixedFontsSizeThreshold</key>
 	<integer>1</integer>
+	<key>AppleWindowTabbingMode</key>
+	<string>manual</string>
 	<key>Default Bookmark Guid</key>
 	<string>6987D696-E4CE-483B-A98E-92FE47FA2EC7</string>
 	<key>DimInactiveSplitPanes</key>
@@ -131,12 +133,14 @@
 			<string></string>
 		</dict>
 	</dict>
+	<key>HotkeyMigratedFromSingleToMulti</key>
+	<true/>
 	<key>LoadPrefsFromCustomFolder</key>
 	<true/>
 	<key>NSFontPanelAttributes</key>
 	<string>1, 0</string>
 	<key>NSNavLastRootDirectory</key>
-	<string>~/src/github.com/jules2689/dotfiles/provision/preferences</string>
+	<string>~/src/github.com/jules2689/dotfiles/lib/provision/preferences</string>
 	<key>NSNavPanelExpandedSizeForOpenMode</key>
 	<string>{712, 448}</string>
 	<key>NSQuotedKeystrokeBinding</key>
@@ -186,7 +190,7 @@
 	<key>NSWindow Frame SharedPreferences</key>
 	<string>929 276 918 495 0 0 2560 1417 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>270 680 2049 638 0 0 2560 1417 </string>
+	<string>0 314 1571 687 0 0 1680 1027 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
 	<string>0 -232 1680 924 0 0 1680 1027 </string>
 	<key>New Bookmarks</key>
@@ -839,7 +843,7 @@
 		</dict>
 	</dict>
 	<key>PrefsCustomFolder</key>
-	<string>/Users/juliannadeau/src/github.com/jules2689/dotfiles/provision/preferences</string>
+	<string>/Users/juliannadeau/src/github.com/jules2689/dotfiles/lib/provision/preferences</string>
 	<key>Print In Black And White</key>
 	<true/>
 	<key>SUEnableAutomaticChecks</key>
@@ -851,7 +855,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2017-05-04T23:49:03Z</date>
+	<date>2017-12-18T02:02:46Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>ShowFullScreenTabBar</key>
@@ -865,7 +869,7 @@
 	<key>findRegex_iTerm</key>
 	<false/>
 	<key>iTerm Version</key>
-	<string>3.0.15</string>
+	<string>3.1.5</string>
 	<key>kCPKSelectionViewPreferredModeKey</key>
 	<integer>0</integer>
 	<key>kCPKSelectionViewShowHSBTextFieldsKey</key>

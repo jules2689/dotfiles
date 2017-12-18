@@ -3,19 +3,19 @@ source ~/dotfiles/.ruby.bash
 source ~/dotfiles/.aliases.bash
 source ~/dotfiles/.keys.bash
 
-export PATH="/Applications/Postgres.app/Contents/MacOS/bin:$PATH"
-export PATH="/Applications/VMware Fusion.app/contents/Library:$PATH"
-export PATH=/user/local:$PATH
-export PATH=/usr/local/git/bin:$PATH
-export PATH=/usr/local/bin:$PATH
-export PATH="~/bin:$PATH"
-export PATH="/usr/local/sbin:$PATH"
-export PATH="$PATH:/Users/juliannadeau/src/github.com/jules2689/task/bin"
-
 export JAVA_HOME=$(/usr/libexec/java_home)
 export ANDROID_HOME="/usr/local/opt/android-sdk"
 export GOPATH="$HOME/golang"
+
+export PATH="/Applications/Postgres.app/Contents/MacOS/bin:$PATH"
+export PATH="/Applications/VMware Fusion.app/contents/Library:$PATH"
+export PATH="/user/local:$PATH"
+export PATH="/usr/local/git/bin:$PATH"
+export PATH="~/bin:$PATH"
+export PATH="/usr/local/sbin:$PATH"
+export PATH="$PATH:/Users/juliannadeau/src/github.com/jules2689/task/bin"
 export PATH="$PATH:$GOPATH/bin"
+export PATH="/usr/local/bin:$PATH"
 
 # Link Sublime to /usr/local/bin
 if [ ! -f /usr/local/bin/subl ]; then
