@@ -10,9 +10,10 @@ module Dotfiles
         @phases = []
 
         add_phase("Install Homebrew & Packages") { install_homebrew }
-        add_phase("Log into Dropbox") { log_into_dropbox }
+        add_phase("Log into 1Password") { log_into_onepassword }
         add_phase("Restore App Settings") { restore_preferences }
-        add_phase("Restore SSH and GPG Keys") { restore_ssh_gpg }
+        add_phase("Restore SSH Keys") { restore_ssh }
+        add_phase("Restore GPG Keys") { restore_gpg }
         add_phase("Install Dev") { install_dev }
         add_phase("Setup Ruby") { install_ruby }
         add_phase("Run Install Script for Dotfiles") { install_script }
@@ -33,9 +34,11 @@ module Dotfiles
         end
       end
 
-      def log_into_dropbox
-        puts "Sign into Dropbox to synchronize 1Password. Enter anything to continue installation"
-        # gets
+      def log_into_onepassword
+        puts "Sign into iCloud to synchronize 1Password. Enter anything to continue installation"
+        unless CLI::UI::Prompt.confirm('Is iCloud logged in? Is 1Password synced?')
+          raise 'Sync iCloud and 1Password to continue'
+        end
       end
 
       def restore_preferences
@@ -67,12 +70,23 @@ module Dotfiles
       end
 
       def run_various
-        FileUtils.ln_s "#{Dotfiles::REPO}/support/.mackup.cfg", "#{Dotfiles::HOME}/.mackup.cfg", force: true
         puts "Setting some default system settings"
         run("DevToolsSecurity -enable")
       end
 
-      def restore_ssh_gpg
+      def restore_ssh
+        puts "Please copy your SSH keys from 1Password to ~/Desktop/ssh"
+        CLI::UI::Prompt.confirm('Did you copy your SSH keys from 1Password to ~/Desktop/ssh?')
+
+        Dir.glob("#{Dotfiles::HOME}/Desktop/ssh/*") do |file|
+          FileUtils.cp(file, File.expand_path("~/.ssh/#{File.basename(file)}"))
+        end
+      end
+
+      def restore_gpg
+        puts "Please copy your GPG keys from 1Password to ~/Desktop/gpg"
+        CLI::UI::Prompt.confirm('Did you copy your GPG keys from 1Password to ~/Desktop/gpg?')
+
         if File.exist?("#{Dotfiles::HOME}/Desktop/gpg")
           run("gpg --import #{Dotfiles::HOME}/Desktop/gpg/julian-secret-gpg.key")
           run("gpg --import-ownertrust #{Dotfiles::HOME}/Desktop/gpg/julian-ownertrust-gpg.txt")
@@ -99,10 +113,9 @@ module Dotfiles
         CLI::UI::Frame.open('') do
           puts "How to finalize the installation"
           puts "================================="
-          puts "1. Sign into Google Drive and Dropbox."
-          puts "2. Sign into Chrome, Spotify, Slack, Xcode."
+          puts "1. Restart terminal"
+          puts "2. Sign into Chrome, Spotify, Slack, XCode."
           puts "3. Fix the screenshot shortcut in keyboard settings."
-          puts "4. Run `mackup restore`"
         end
       end
     end

@@ -30,7 +30,7 @@ module Dotfiles
 
       def bash_profile
         puts "Relinking ~/.bash_profile"
-        FileUtils.ln_s("#{Dotfiles::REPO}/support/.bash_profile", "#{Dotfiles::HOME}/.bash_profile", force: true)
+        FileUtils.ln_s("#{Dotfiles::REPO}/lib/support/.bash_profile", "#{Dotfiles::HOME}/.bash_profile", force: true)
       end
 
       def clean_dotfiles
@@ -50,9 +50,9 @@ module Dotfiles
         end
 
         Dir.chdir("#{Dotfiles::REPO}/lib/support") do
-          Dir.glob('*.*.bash') do |file|
+          Dir.glob('.*.bash') do |file|
             puts "Symlinking #{file} to #{Dotfiles::HOME}/dotfiles/scripts/#{file}"
-            FileUtils.ln_s file, "#{Dotfiles::HOME}/dotfiles/scripts/#{File.basename(file)}", force: true
+            FileUtils.cp file, "#{Dotfiles::HOME}/dotfiles/#{File.basename(file)}"
           end
         end
       end
