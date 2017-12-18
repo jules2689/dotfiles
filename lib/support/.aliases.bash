@@ -18,8 +18,6 @@ alias postgrestop=postgresstop
 alias stoppostgres=postgresstop
 alias stopostgres=postgresstop
 
-alias web-images='function _webimages(){ echo "Compressing $1 files"; find *.$1 | xargs -I {} -n 1 convert {} -quality 75 -resize 800x {}; };_webimages'
-
 backup_gpg() {
   gpg -a --export julian@jnadeau.ca > julian-public-gpg.key
   gpg -a --export-secret-keys julian@jnadeau.ca > julian-secret-gpg.key
@@ -28,4 +26,3 @@ backup_gpg() {
 
 alias devbundle="export RUBYOPT='-I/Users/juliannadeau/src/github.com/bundler/bundler/lib'"
 alias testit=~/dotfiles/scripts/core_test
-alias s=spotify

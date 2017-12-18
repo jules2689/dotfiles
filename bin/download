@@ -1,0 +1,7 @@
+#!/bin/bash
+
+export TERM=xterm-256color
+
+cd $(mktemp -d)
+git clone https://github.com/jules2689/dotfiles.git
+ruby lib/setup.rb
