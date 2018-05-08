@@ -114,7 +114,7 @@ module Dotfiles
           puts "How to finalize the installation"
           puts "================================="
           puts "1. Restart terminal"
-          puts "2. Sign into Chrome, Spotify, Slack, XCode."
+          puts "2. Sign into Firefox, Spotify, Slack, XCode."
           puts "3. Fix the screenshot shortcut in keyboard settings."
         end
       end
