@@ -8,16 +8,16 @@ module Dotfiles
     INSTALL_BREW_COMMAND = 'ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" < /dev/null'
 
     class << self
-      def call(args)
+      def call
         @phases = []
 
-        add_phase("Install Homebrew & Packages") { install_homebrew } unless args.include?("--no-homebrew")
+        add_phase("Install Homebrew & Packages") { install_homebrew }
         add_phase("Log into 1Password") { log_into_onepassword }
         add_phase("Restore App Settings") { restore_preferences }
-        add_phase("Restore SSH Keys") { restore_ssh } unless args.include?("--no-ssh")
-        add_phase("Restore GPG Keys") { restore_gpg } unless args.include?("--no-gpg")
-        add_phase("Install Dev") { install_dev } unless args.include?("--no-dev")
-        add_phase("Setup Ruby") { install_ruby } unless args.include?("--no-ruby")
+        add_phase("Restore SSH Keys") { restore_ssh }
+        add_phase("Restore GPG Keys") { restore_gpg }
+        add_phase("Install Dev") { install_dev }
+        add_phase("Setup Ruby") { install_ruby }
         add_phase("Run Install Script for Dotfiles") { install_script }
         add_phase("Finalize installation") { run_various }
 
@@ -30,6 +30,7 @@ module Dotfiles
       private
 
       def install_homebrew
+        return unless CLI::UI::Prompt.confirm('Do you want to run Homebrew install scripts?")
         Dir.chdir(Dotfiles::REPO) do
           system(INSTALL_BREW_COMMAND) unless system("which brew")
           
@@ -84,7 +85,9 @@ module Dotfiles
 
         FileUtils.mkdir_p(File.expand_path("~/.ssh"))
         Dir.glob("#{Dotfiles::HOME}/Desktop/ssh/*") do |file|
-          FileUtils.cp(file, File.expand_path("~/.ssh/#{File.basename(file)}"))
+          path = File.expand_path("~/.ssh/#{File.basename(file)}")
+          next if File.exist?(path)
+          FileUtils.cp(file, path)
         end
       end
 
@@ -127,4 +130,4 @@ module Dotfiles
   end
 end
 
-Dotfiles::Setup.call(ARGV.join(" "))
+Dotfiles::Setup.call
