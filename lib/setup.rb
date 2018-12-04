@@ -5,6 +5,8 @@ require_relative 'install'
 
 module Dotfiles
   class Setup < Runner
+    INSTALL_BREW_COMMAND = "/usr/bin/ruby -e \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)\""
+
     class << self
       def call
         @phases = []
@@ -29,6 +31,8 @@ module Dotfiles
 
       def install_homebrew
         Dir.chdir(Dotfiles::REPO) do
+          system(INSTALL_BREW_COMMAND) unless system("which -q brew")
+          
           return if `brew bundle check`.include?('are satisfied')
           run("brew bundle install")
         end
