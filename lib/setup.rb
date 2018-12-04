@@ -79,9 +79,10 @@ module Dotfiles
       end
 
       def restore_ssh
-        puts "Please copy your SSH keys from 1Password to ~/Desktop/ssh"
-        CLI::UI::Prompt.confirm('Did you copy your SSH keys from 1Password to ~/Desktop/ssh?')
+        puts "Please copy your SSH keys from 1Password to ~/Desktop/.ssh"
+        CLI::UI::Prompt.confirm('Did you copy your SSH keys from 1Password to ~/Desktop/.ssh?')
 
+        FileUtils.mkdir_p(File.expand_path("~/.ssh"))
         Dir.glob("#{Dotfiles::HOME}/Desktop/ssh/*") do |file|
           FileUtils.cp(file, File.expand_path("~/.ssh/#{File.basename(file)}"))
         end
