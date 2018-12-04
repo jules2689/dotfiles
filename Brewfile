@@ -52,7 +52,6 @@ brew "ncurses"
 brew "neovim"
 brew "nginx"
 brew "pandoc"
-brew "phantomjs"
 brew "postgresql"
 brew "pyenv"
 brew "ragel"
@@ -103,8 +102,8 @@ cask "skype"
 cask "slack"
 cask "spotify"
 cask "sublime-text"
-cask "telegram"
 cask "viscosity"
+cask "whatsapp"
 
 mas "GIF Brewery 3", id: 1081413713
 mas "Irvue", id: 1039633667
@@ -112,3 +111,5 @@ mas "Numbers", id: 409203825
 mas "Pages", id: 409201541
 mas "Write", id: 848311469
 mas "Xcode", id: 497799835
+mas "Line", id: 539883307
+mas "Telegram", id: 747648890
