@@ -60,11 +60,12 @@ module Dotfiles
       end
 
       def install_ruby
+        FileUtils.mkdir_p("/opt/rubies")
         response = Net::HTTP.get_response(URI("https://www.ruby-lang.org/en/downloads/releases/"))
         ruby = response.body.scan(/Ruby ([\d\.]*?)</).flatten.sort.reverse.take(1).first
         unless File.exist?("/opt/rubies/#{ruby.strip}")
           CLI::UI::Spinner.spin("Installing Ruby #{ruby}") do
-            run("ruby-install ruby-#{ruby.strip}")
+            run("ruby-install -r /opt/rubies ruby-#{ruby.strip}")
           end
         end
         File.write("#{Dotfiles::HOME}/.ruby-version", ruby.strip)
