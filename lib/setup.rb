@@ -60,7 +60,7 @@ module Dotfiles
       end
 
       def install_ruby
-        FileUtils.mkdir_p("/opt/rubies")
+        run("sudo mkdir -p /opt/rubies")
         response = Net::HTTP.get_response(URI("https://www.ruby-lang.org/en/downloads/releases/"))
         ruby = response.body.scan(/Ruby ([\d\.]*?)</).flatten.sort.reverse.take(1).first
         unless File.exist?("/opt/rubies/#{ruby.strip}")
