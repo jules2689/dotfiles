@@ -1,5 +1,6 @@
 tap "shopify/shopify"
 tap "homebrew/portable"
+tap "homebrew/cask"
 tap "homebrew/core"
 tap "homebrew/boneyard"
 tap "homebrew/bundle"
