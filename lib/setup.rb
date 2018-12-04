@@ -30,7 +30,7 @@ module Dotfiles
       private
 
       def install_homebrew
-        return unless CLI::UI::Prompt.confirm('Do you want to run Homebrew install scripts?")
+        return unless CLI::UI::Prompt.confirm('Do you want to run Homebrew install scripts?')
         Dir.chdir(Dotfiles::REPO) do
           system(INSTALL_BREW_COMMAND) unless system("which brew")
           
