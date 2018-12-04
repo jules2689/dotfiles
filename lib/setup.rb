@@ -31,7 +31,7 @@ module Dotfiles
 
       def install_homebrew
         Dir.chdir(Dotfiles::REPO) do
-          system(INSTALL_BREW_COMMAND) unless system("which -q brew")
+          system(INSTALL_BREW_COMMAND) unless system("which brew")
           
           return if `brew bundle check`.include?('are satisfied')
           run("brew bundle install")
