@@ -1,5 +1,4 @@
 tap "shopify/shopify"
-tap "homebrew/dupes"
 tap "homebrew/portable"
 tap "homebrew/core"
 tap "homebrew/boneyard"
