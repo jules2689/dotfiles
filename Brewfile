@@ -16,18 +16,12 @@ brew "autoconf"
 brew "automake"
 brew "readline"
 brew "bash"
-brew "bison"
 brew "libffi"
 brew "perl"
 brew "git"
-brew "carthage"
 brew "cdiff"
 brew "chromedriver"
 brew "curl", link: true
-brew "docker-machine"
-brew "elasticsearch", restart_service: true
-brew "elinks"
-brew "entr"
 brew "fswatch"
 brew "fzf"
 brew "gcc"
@@ -40,10 +34,7 @@ brew "pkg-config"
 brew "python"
 brew "graphviz"
 brew "groff"
-brew "hadoop"
-brew "heroku"
 brew "imagemagick@6", link: true
-brew "kubernetes-cli"
 brew "lftp"
 brew "libev"
 brew "libgda"
@@ -95,8 +86,6 @@ brew "shopify/shopify/themekit"
 brew "shopify/shopify/toxiproxy"
 
 cask "1password"
-cask "1password-cli"
-cask "adium"
 cask "basictex"
 cask "dash"
 cask "docker"
@@ -107,7 +96,6 @@ cask "google-cloud-sdk"
 cask "google-drive"
 cask "gpgtools"
 cask "iterm2"
-cask "little-snitch"
 cask "postgres"
 cask "sequel-pro"
 cask "sketch"
@@ -122,6 +110,5 @@ mas "GIF Brewery 3", id: 1081413713
 mas "Irvue", id: 1039633667
 mas "Numbers", id: 409203825
 mas "Pages", id: 409201541
-mas "Pocket", id: 568494494
 mas "Write", id: 848311469
 mas "Xcode", id: 497799835
