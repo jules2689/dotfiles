@@ -8,16 +8,16 @@ module Dotfiles
     INSTALL_BREW_COMMAND = 'ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" < /dev/null'
 
     class << self
-      def call
+      def call(args)
         @phases = []
 
-        add_phase("Install Homebrew & Packages") { install_homebrew }
+        add_phase("Install Homebrew & Packages") { install_homebrew } unless args.include("--no-homebrew")
         add_phase("Log into 1Password") { log_into_onepassword }
         add_phase("Restore App Settings") { restore_preferences }
-        add_phase("Restore SSH Keys") { restore_ssh }
-        add_phase("Restore GPG Keys") { restore_gpg }
-        add_phase("Install Dev") { install_dev }
-        add_phase("Setup Ruby") { install_ruby }
+        add_phase("Restore SSH Keys") { restore_ssh } unless args.include("--no-ssh")
+        add_phase("Restore GPG Keys") { restore_gpg } unless args.include("--no-gpg")
+        add_phase("Install Dev") { install_dev } unless args.include("--no-dev")
+        add_phase("Setup Ruby") { install_ruby } unless args.include("--no-ruby")
         add_phase("Run Install Script for Dotfiles") { install_script }
         add_phase("Finalize installation") { run_various }
 
@@ -127,4 +127,4 @@ module Dotfiles
   end
 end
 
-Dotfiles::Setup.call
+Dotfiles::Setup.call(ARGV.join(" "))
