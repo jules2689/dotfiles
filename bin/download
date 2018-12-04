@@ -17,4 +17,4 @@ fi
 
 cd $(mktemp -d)
 git clone https://github.com/jules2689/dotfiles.git .
-bin/install
+bin/install $@
