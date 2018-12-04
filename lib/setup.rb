@@ -5,7 +5,7 @@ require_relative 'install'
 
 module Dotfiles
   class Setup < Runner
-    INSTALL_BREW_COMMAND = "/usr/bin/ruby -e \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)\""
+    INSTALL_BREW_COMMAND = 'ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" < /dev/null'
 
     class << self
       def call
