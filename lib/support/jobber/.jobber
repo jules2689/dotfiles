@@ -1,0 +1,72 @@
+version: 1.4
+
+prefs:
+  runLog:
+    type: file
+    path: /tmp/jobber
+    maxFileLen: 100m # in MB
+    maxHistories: 5
+
+resultSinks:
+  - &growlNotification
+    type: program
+    path: '/Users/juliannadeau/src/github.com/jules2689/dotfiles/lib/support/jobber/notifier.rb'
+  - &recordLogs
+    type: program
+    path: '/Users/juliannadeau/src/github.com/jules2689/dotfiles/lib/support/jobber/logger.rb'
+
+# Time format:
+# SEC MIN HOUR MONTH_DAY MONTH WEEK_DAY.
+jobs:
+  DesktopCleanup:
+    cmd: sudo mv /Users/juliannadeau/Desktop/* /Users/juliannadeau/DesktopCrap
+    time: '0 0 * * * *'
+    notifyOnError:
+     - *growlNotification
+     - *recordLogs
+    notifyOnFailure:
+     - *growlNotification
+     - *recordLogs
+    notifyOnSuccess:
+    - *recordLogs
+    onError: Continue
+  DownloadsCleanup:
+    cmd: sudo rm -rf /Users/juliannadeau/Downloads/*
+    time: '0 20 * * * *'
+    notifyOnError:
+     - *growlNotification
+     - *recordLogs
+    notifyOnFailure:
+     - *growlNotification
+     - *recordLogs
+    notifyOnSuccess:
+    - *recordLogs
+    onError: Continue
+  SlackCleanser:
+    cmd: |
+      cd /Users/juliannadeau/src/github.com/jules2689/slack
+      PATH=/usr/local/bin:$PATH  /opt/rubies/2.5.3/bin/ruby bin/slack
+    time: '0 55 * * * *'
+    notifyOnError:
+     - *growlNotification
+     - *recordLogs
+    notifyOnFailure:
+     - *growlNotification
+     - *recordLogs
+    notifyOnSuccess:
+    - *recordLogs
+    onError: Continue
+  PersonalStats:
+    cmd: |
+      cd /Users/juliannadeau/src/github.com/jules2689/personal_stats
+      PATH=/usr/local/bin:$PATH /opt/rubies/2.5.3/bin/ruby run.rb
+    time: '0 55 * * * *'
+    notifyOnError:
+     - *growlNotification
+     - *recordLogs
+    notifyOnFailure:
+     - *growlNotification
+     - *recordLogs
+    notifyOnSuccess:
+    - *recordLogs
+    onError: Continue

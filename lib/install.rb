@@ -10,6 +10,7 @@ module Dotfiles
 
         add_phase("Setup/Backup Secret Keys") { backup_secret_keys }     
         add_phase("Setup Bash Profile") { bash_profile }           
+        add_phase("Setup Jobber") { symlink_jobber }
         add_phase("Setup Vim") { vim }                    
         add_phase("Clean dotfiles") { clean_dotfiles }         
         add_phase("Symlink dotfiles to system") { symlink_dotfiles }       
@@ -29,8 +30,10 @@ module Dotfiles
       end
 
       def bash_profile
-        puts "Relinking ~/.bash_profile"
-        FileUtils.ln_s("#{Dotfiles::REPO}/lib/support/.bash_profile", "#{Dotfiles::HOME}/.bash_profile", force: true)
+        from = "#{Dotfiles::REPO}/lib/support/.bash_profile"
+        to = "#{Dotfiles::HOME}/.bash_profile"
+        puts "Relinking ~/.bash_profile #{from} to #{to}"
+        FileUtils.ln_s(from, to, force: true)
       end
 
       def clean_dotfiles
@@ -57,8 +60,16 @@ module Dotfiles
         end
       end
 
+      def symlink_jobber
+        from = "#{Dotfiles::REPO}/lib/support/jobber/.jobber"
+        to = "#{Dotfiles::HOME}/.jobber"
+        puts "Relinking ~/.jobber #{from} to #{to}"
+        FileUtils.ln_s(from, to, force: true)
+      end
+
       def vim
-        FileUtils.ln_s "#{Dotfiles::REPO}/support/.vim/*", "#{Dotfiles::HOME}/.vim", force: true
+        FileUtils.mkdir_p "#{Dotfiles::HOME}/.vim"
+
         FileUtils.ln_s "#{Dotfiles::REPO}/support/.vimrc", "#{Dotfiles::HOME}/.vimrc", force: true
         FileUtils.ln_s "#{Dotfiles::REPO}/support/.vimrc", "#{Dotfiles::HOME}/.vim/init.vim", force: true
 

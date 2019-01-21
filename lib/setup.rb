@@ -17,7 +17,7 @@ module Dotfiles
         add_phase("Restore SSH Keys") { restore_ssh }
         add_phase("Restore GPG Keys") { restore_gpg }
         add_phase("Install Dev") { install_dev }
-        add_phase("Setup Ruby") { install_ruby }
+        add_phase("Install Jobber") { install_jobber }
         add_phase("Run Install Script for Dotfiles") { install_script }
         add_phase("Finalize installation") { run_various }
 
@@ -59,16 +59,15 @@ module Dotfiles
         run("eval \"$(curl -sS https://dev.shopify.io/up)\"")
       end
 
-      def install_ruby
-        run("sudo mkdir -p /opt/rubies")
-        response = Net::HTTP.get_response(URI("https://www.ruby-lang.org/en/downloads/releases/"))
-        ruby = response.body.scan(/Ruby ([\d\.]*?)</).flatten.sort.reverse.take(1).first
-        unless File.exist?("/opt/rubies/#{ruby.strip}")
-          CLI::UI::Spinner.spin("Installing Ruby #{ruby}") do
-            run("ruby-install -r /opt/rubies ruby-#{ruby.strip}")
-          end
-        end
-        File.write("#{Dotfiles::HOME}/.ruby-version", ruby.strip)
+      def install_jobber
+        return if File.exist?('/usr/local/libexec/jobbermaster')
+        puts "Setting up Jobber."
+        run("mkdir -p ~/src/github.com/jules2689")
+        run("cd ~/src/github.com/jules2689 && git clone https://github.com/jules2689/jobber.git")
+        run("cd ~/src/github.com/jules2689/jobber && make check && sudo make install DESTDIR=/")
+
+        puts "Installing Daemon"
+        run("sudo cp #{File.join(__dir__, 'support', 'jobber', 'jobber.plist')} /Library/LaunchDaemons/com.juliannadeau.jobber.plist")
       end
 
       def install_script

@@ -2,6 +2,7 @@ source ~/dotfiles/.github.bash
 source ~/dotfiles/.ruby.bash
 source ~/dotfiles/.aliases.bash
 source ~/dotfiles/.keys.bash
+source ~/.bashrc
 
 export JAVA_HOME=$(/usr/libexec/java_home)
 export ANDROID_HOME="/usr/local/opt/android-sdk"
@@ -41,3 +42,4 @@ fi
 [ -f /usr/local/share/chruby/chruby.sh ] && source /usr/local/share/chruby/chruby.sh
 [ -f /usr/local/share/chruby/auto.sh ] && source /usr/local/share/chruby/auto.sh
 RUBIES+=(/usr/local/Cellar/shopify-ruby/*)
+if [ -e /Users/juliannadeau/.nix-profile/etc/profile.d/nix.sh ]; then . /Users/juliannadeau/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
