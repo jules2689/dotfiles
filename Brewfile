@@ -1,4 +1,3 @@
-tap "shopify/shopify"
 tap "homebrew/portable"
 tap "homebrew/cask"
 tap "homebrew/core"
@@ -77,12 +76,7 @@ brew "wget"
 brew "xhyve"
 brew "yarn"
 brew "zsh"
-
-brew "shopify/shopify/ejson"
-brew "shopify/shopify/libzookeeper"
-brew "shopify/shopify/shopify-graphicsmagick"
-brew "shopify/shopify/themekit"
-brew "shopify/shopify/toxiproxy"
+brew "ejson"
 
 cask "1password"
 cask "basictex"
