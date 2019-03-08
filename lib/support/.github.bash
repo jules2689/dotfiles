@@ -1,5 +1,7 @@
 function parse_git_dirty {
-  [[ $(git status --porcelain) != "" ]] && echo "*"
+  if [ -d .git ]; then
+  	[[ $(git status --porcelain) != "" ]] && echo "*"
+  fi
 }
 
 function parse_git_branch {

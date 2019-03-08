@@ -11,7 +11,7 @@ module Dotfiles
         add_phase("Setup/Backup Secret Keys") { backup_secret_keys }     
         add_phase("Setup Bash Profile") { bash_profile }           
         add_phase("Setup Jobber") { symlink_jobber }
-        # add_phase("Setup Vim") { vim }                    
+        add_phase("Setup Vim") { vim }                
         add_phase("Clean dotfiles") { clean_dotfiles }         
         add_phase("Symlink dotfiles to system") { symlink_dotfiles }       
         add_phase("Setup SSH Config") { ssh_config }             
@@ -68,6 +68,8 @@ module Dotfiles
       end
 
       def vim
+        run("ssh-keyscan -H github.com >> ~/.ssh/known_hosts")
+
         FileUtils.mkdir_p "#{Dotfiles::HOME}/.vim"
 
         FileUtils.ln_s "#{Dotfiles::REPO}/support/.vimrc", "#{Dotfiles::HOME}/.vimrc", force: true
@@ -76,7 +78,7 @@ module Dotfiles
         FileUtils.mkdir_p("#{Dotfiles::HOME}/.config")
         FileUtils.ln_s "#{Dotfiles::HOME}/.vim", "#{Dotfiles::HOME}/.config/nvim", force: true
 
-        run("yes | bash #{Dotfiles::REPO}/lib/support/vim_plugins.sh")
+        run("bash #{Dotfiles::REPO}/lib/support/vim_plugins.sh")
       end
 
       def restore_secrets_keys

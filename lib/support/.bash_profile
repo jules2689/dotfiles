@@ -2,7 +2,9 @@ source ~/dotfiles/.github.bash
 source ~/dotfiles/.ruby.bash
 source ~/dotfiles/.aliases.bash
 source ~/dotfiles/.keys.bash
-source ~/.bashrc
+if [ -f ~/.bashrc ]; then
+  source ~/.bashrc
+fi
 
 export JAVA_HOME=$(/usr/libexec/java_home)
 export ANDROID_HOME="/usr/local/opt/android-sdk"
@@ -26,10 +28,8 @@ eval "$(ssh-agent -s)" > /dev/null 2>&1
 ssh-add ~/.ssh/id_rsa > /dev/null 2>&1
 
 # GPG
-export GPG_TTY=$(tty)
 [ -f ~/.gpg-agent-info ] && source ~/.gpg-agent-info
-if [ -S "${GPG_AGENT_INFO%%:*}" ]; then
-  export GPG_AGENT_INFO
-else
-  eval $( gpg-agent --daemon --write-env-file ~/.gpg-agent-info  > /dev/null 2>&1 )
+if [ "$SSH_AUTH_SOCK" != "$HOME/.gnupg/S.gpg-agent.ssh" ]; then
+  eval $( gpg-agent --daemon --enable-ssh-support >/dev/null 2>&1 )
+  export GPG_TTY=$(tty)
 fi
