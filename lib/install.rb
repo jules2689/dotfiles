@@ -11,7 +11,7 @@ module Dotfiles
         add_phase("Setup/Backup Secret Keys") { backup_secret_keys }     
         add_phase("Setup Bash Profile") { bash_profile }           
         add_phase("Setup Jobber") { symlink_jobber }
-        add_phase("Setup Vim") { vim }                    
+        # add_phase("Setup Vim") { vim }                    
         add_phase("Clean dotfiles") { clean_dotfiles }         
         add_phase("Symlink dotfiles to system") { symlink_dotfiles }       
         add_phase("Setup SSH Config") { ssh_config }             
