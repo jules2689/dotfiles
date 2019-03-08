@@ -1,3 +1,4 @@
+source ~/dotfiles/.dev.bash
 source ~/dotfiles/.github.bash
 source ~/dotfiles/.ruby.bash
 source ~/dotfiles/.aliases.bash
@@ -17,6 +18,7 @@ export PATH="~/bin:$PATH"
 export PATH="/usr/local/sbin:$PATH"
 export PATH="$PATH:$GOPATH/bin"
 export PATH="/usr/local/bin:$PATH"
+export PATH="$HOME/dotfiles/scripts/:$PATH"
 
 # Link Sublime to /usr/local/bin
 if [ ! -f /usr/local/bin/subl ]; then

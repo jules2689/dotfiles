@@ -47,8 +47,14 @@ module Dotfiles
 
         Dir.chdir("#{Dotfiles::REPO}/lib/support/scripts") do
           Dir.glob('*') do |file|
-            puts "Symlinking #{file} to #{Dotfiles::HOME}/dotfiles/scripts/#{file}"
-            FileUtils.ln_s file, "#{Dotfiles::HOME}/dotfiles/scripts/#{File.basename(file)}", force: true
+            from = "#{Dir.pwd}/#{file}"
+            to = "#{Dotfiles::HOME}/dotfiles/scripts/#{file}"
+            puts "Symlinking #{from} to #{to}"
+            FileUtils.ln_s(
+              from,
+              to,
+              force: true
+            )
           end
         end
 
@@ -102,8 +108,10 @@ module Dotfiles
         FileUtils.cp "#{Dotfiles::REPO}/lib/support/ssh_config", "#{Dotfiles::HOME}/.ssh/config"
 
         puts "Restoring GPG Config"
-        FileUtils.ln_s "#{Dotfiles::REPO}/lib/support/gpg/gpg-agent.conf", "#{Dotfiles::HOME}/.gnupg/gpg-agent.conf"
-        FileUtils.ln_s "#{Dotfiles::REPO}/lib/support/gpg/gpg.conf", "#{Dotfiles::HOME}/.gnupg/gpg.conf"
+        FileUtils.ln_s "#{Dotfiles::REPO}/lib/support/gpg/gpg-agent.conf",
+          "#{Dotfiles::HOME}/.gnupg/gpg-agent.conf", force: true
+        FileUtils.ln_s "#{Dotfiles::REPO}/lib/support/gpg/gpg.conf",
+          "#{Dotfiles::HOME}/.gnupg/gpg.conf", force: true
       end
     end
   end
