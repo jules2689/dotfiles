@@ -1,7 +1,6 @@
 tap "homebrew/portable"
 tap "homebrew/cask"
 tap "homebrew/core"
-tap "homebrew/boneyard"
 tap "homebrew/bundle"
 tap "homebrew/services"
 tap "caskroom/versions"
