@@ -14,7 +14,7 @@ module Dotfiles
         add_phase("Setup Vim") { vim }                
         add_phase("Clean dotfiles") { clean_dotfiles }         
         add_phase("Symlink dotfiles to system") { symlink_dotfiles }       
-        add_phase("Setup SSH Config") { ssh_config }             
+        add_phase("Setup SSH & GPG Config") { ssh_gpg_config }
         add_phase("Setup Git Completion") { git_completion }         
         add_phase("Restore Secrets Keys") { restore_secrets_keys }   
 
@@ -97,9 +97,13 @@ module Dotfiles
         FileUtils.cp "#{Dotfiles::REPO}/lib/support/git_completion.sh", "#{Dotfiles::HOME}/.git-completion.bash"
       end
 
-      def ssh_config
+      def ssh_gpg_config
         puts "Restoring SSH Config"
         FileUtils.cp "#{Dotfiles::REPO}/lib/support/ssh_config", "#{Dotfiles::HOME}/.ssh/config"
+
+        puts "Restoring GPG Config"
+        FileUtils.ln_s "#{Dotfiles::REPO}/lib/support/gpg/gpg-agent.conf", "#{Dotfiles::HOME}/.gnupg/gpg-agent.conf"
+        FileUtils.ln_s "#{Dotfiles::REPO}/lib/support/gpg/gpg.conf", "#{Dotfiles::HOME}/.gnupg/gpg.conf"
       end
     end
   end

@@ -30,6 +30,6 @@ ssh-add ~/.ssh/id_rsa > /dev/null 2>&1
 # GPG
 [ -f ~/.gpg-agent-info ] && source ~/.gpg-agent-info
 if [ "$SSH_AUTH_SOCK" != "$HOME/.gnupg/S.gpg-agent.ssh" ]; then
-  eval $( gpg-agent --daemon --enable-ssh-support >/dev/null 2>&1 )
+  eval $( gpg-agent --daemon --options "$HOME/.gnupg/gpg-agent.conf" --enable-ssh-support >/dev/null 2>&1 )
   export GPG_TTY=$(tty)
 fi
