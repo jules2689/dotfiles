@@ -76,7 +76,7 @@ module Dotfiles
         FileUtils.mkdir_p("#{Dotfiles::HOME}/.config")
         FileUtils.ln_s "#{Dotfiles::HOME}/.vim", "#{Dotfiles::HOME}/.config/nvim", force: true
 
-        run("bash #{Dotfiles::REPO}/lib/support/vim_plugins.sh")
+        run("yes | bash #{Dotfiles::REPO}/lib/support/vim_plugins.sh")
       end
 
       def restore_secrets_keys
