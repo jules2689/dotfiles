@@ -2,6 +2,7 @@
 
 require_relative 'load'
 require_relative 'install'
+require 'fileutils'
 
 module Dotfiles
   class Setup < Runner
@@ -10,13 +11,14 @@ module Dotfiles
     class << self
       def call
         @phases = []
+        
+        FileUtils.mkdir_p(File.expand_path('~/src/github.com/jules2689'))
 
         add_phase("Install Homebrew & Packages") { install_homebrew }
         add_phase("Log into 1Password") { log_into_onepassword }
         add_phase("Restore App Settings") { restore_preferences }
         add_phase("Restore SSH Keys") { restore_ssh }
         add_phase("Restore GPG Keys") { restore_gpg }
-        add_phase("Install Dev") { install_dev }
         add_phase("Install Jobber") { install_jobber }
         add_phase("Run Install Script for Dotfiles") { install_script }
         add_phase("Finalize installation") { run_various }
@@ -51,12 +53,6 @@ module Dotfiles
           "#{Dotfiles::REPO}/lib/provision/preferences/com.googlecode.iterm2.plist",
           "#{Dotfiles::HOME}/Library/Preferences/com.googlecode.iterm2.plist"
         )
-      end
-
-      def install_dev
-        return if File.exist?('/opt/dev')
-        puts "Setting up Dev."
-        run("eval \"$(curl -sS https://dev.shopify.io/up)\"")
       end
 
       def install_jobber
