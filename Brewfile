@@ -87,8 +87,8 @@ cask "viscosity"
 cask "visual-studio-code"
 cask "whatsapp"
 
-mas "GIF Brewery 3", id: 1081413713
-mas "Write", id: 848311469
-mas "Xcode", id: 497799835
-mas "Line", id: 539883307
-mas "Telegram", id: 747648890
+# mas "GIF Brewery 3", id: 1081413713
+# mas "Write", id: 848311469
+# mas "Xcode", id: 497799835
+# mas "Line", id: 539883307
+# mas "Telegram", id: 747648890
