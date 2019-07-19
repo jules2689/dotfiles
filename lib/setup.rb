@@ -19,7 +19,6 @@ module Dotfiles
         add_phase("Restore App Settings") { restore_preferences }
         add_phase("Restore/Setup SSH Keys") { restore_setup_ssh }
         add_phase("Restore/Setup GPG Keys") { restore_setup_gpg }
-        add_phase("Install Jobber") { install_jobber }
         add_phase("Run Install Script for Dotfiles") { install_script }
         add_phase("Finalize installation") { run_various }
 
@@ -53,17 +52,6 @@ module Dotfiles
           "#{Dotfiles::REPO}/lib/provision/preferences/com.googlecode.iterm2.plist",
           "#{Dotfiles::HOME}/Library/Preferences/com.googlecode.iterm2.plist"
         )
-      end
-
-      def install_jobber
-        return if File.exist?('/usr/local/libexec/jobbermaster')
-        puts "Setting up Jobber."
-        run("mkdir -p ~/src/github.com/jules2689")
-        run("cd ~/src/github.com/jules2689 && git clone https://github.com/jules2689/jobber.git")
-        run("cd ~/src/github.com/jules2689/jobber && make check && sudo make install DESTDIR=/")
-
-        puts "Installing Daemon"
-        run("sudo cp #{File.join(__dir__, 'support', 'jobber', 'jobber.plist')} /Library/LaunchDaemons/com.juliannadeau.jobber.plist")
       end
 
       def install_script

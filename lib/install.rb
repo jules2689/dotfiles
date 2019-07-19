@@ -8,26 +8,17 @@ module Dotfiles
       def call
         @phases = []
 
-        add_phase("Setup/Backup Secret Keys") { backup_secret_keys }     
         add_phase("Setup Bash Profile") { bash_profile }           
-        add_phase("Setup Jobber") { symlink_jobber }
         add_phase("Setup Vim") { vim }                
         add_phase("Clean dotfiles") { clean_dotfiles }         
         add_phase("Symlink dotfiles to system") { symlink_dotfiles }       
         add_phase("Setup SSH & GPG Config") { ssh_gpg_config }
         add_phase("Setup Git Completion") { git_completion }         
-        add_phase("Restore Secrets Keys") { restore_secrets_keys }   
 
         run_phases
       end
 
       private
-
-      def backup_secret_keys
-        return unless File.exist?(File.join(DOTFILES, ".keys.bash"))
-        puts "Backing up keys"
-        FileUtils.cp "#{Dotfiles::DOTFILES}/.keys.bash", "#{Dotfiles::HOME}/.keys.bash"
-      end
 
       def bash_profile
         from = "#{Dotfiles::REPO}/lib/support/.bash_profile"
@@ -66,13 +57,6 @@ module Dotfiles
         end
       end
 
-      def symlink_jobber
-        from = "#{Dotfiles::REPO}/lib/support/jobber/.jobber"
-        to = "#{Dotfiles::HOME}/.jobber"
-        puts "Relinking ~/.jobber #{from} to #{to}"
-        FileUtils.ln_s(from, to, force: true)
-      end
-
       def vim
         run("ssh-keyscan -H github.com >> ~/.ssh/known_hosts")
 
@@ -85,17 +69,6 @@ module Dotfiles
         FileUtils.ln_s "#{Dotfiles::HOME}/.vim", "#{Dotfiles::HOME}/.config/nvim", force: true
 
         run("bash #{Dotfiles::REPO}/lib/support/vim_plugins.sh")
-      end
-
-      def restore_secrets_keys
-        FileUtils.touch "#{Dotfiles::HOME}/dotfiles/.keys.bash" rescue nil
-
-        # Restore any backed up keys
-        if File.exist?("#{Dotfiles::HOME}/.keys.bash")
-          puts "Restoring keys and removing backup"
-          FileUtils.cp "#{Dotfiles::HOME}/.keys.bash", "#{Dotfiles::HOME}/dotfiles/.keys.bash"
-          FileUtils.rm "#{Dotfiles::HOME}/.keys.bash"
-        end
       end
 
       def git_completion
