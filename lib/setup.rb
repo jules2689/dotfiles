@@ -17,8 +17,8 @@ module Dotfiles
         add_phase("Install Homebrew & Packages") { install_homebrew }
         add_phase("Log into 1Password") { log_into_onepassword }
         add_phase("Restore App Settings") { restore_preferences }
-        add_phase("Restore SSH Keys") { restore_ssh }
-        add_phase("Restore GPG Keys") { restore_gpg }
+        add_phase("Restore/Setup SSH Keys") { restore_setup_ssh }
+        add_phase("Restore/Setup GPG Keys") { restore_setup_gpg }
         add_phase("Install Jobber") { install_jobber }
         add_phase("Run Install Script for Dotfiles") { install_script }
         add_phase("Finalize installation") { run_various }
@@ -75,30 +75,70 @@ module Dotfiles
         run("DevToolsSecurity -enable")
       end
 
-      def restore_ssh
-        puts "Please copy your SSH keys from 1Password to ~/Desktop/.ssh"
-        CLI::UI::Prompt.confirm('Did you copy your SSH keys from 1Password to ~/Desktop/.ssh?')
+      def restore_setup_ssh
+        case CLI::UI::Prompt.ask('Do you want to restore existing or setup new SSH keys?', %w(restore setup))
+        when 'restore'
+          puts "Please copy your SSH keys from 1Password to ~/Desktop/.ssh"
+          CLI::UI::Prompt.confirm('Did you copy your SSH keys from 1Password to ~/Desktop/.ssh?')
 
-        FileUtils.mkdir_p(File.expand_path("~/.ssh"))
-        Dir.glob("#{Dotfiles::HOME}/Desktop/ssh/*") do |file|
-          path = File.expand_path("~/.ssh/#{File.basename(file)}")
-          next if File.exist?(path)
-          FileUtils.cp(file, path)
+          FileUtils.mkdir_p(File.expand_path("~/.ssh"))
+          Dir.glob("#{Dotfiles::HOME}/Desktop/ssh/*") do |file|
+            path = File.expand_path("~/.ssh/#{File.basename(file)}")
+            next if File.exist?(path)
+            FileUtils.cp(file, path)
+          end
+        when 'setup'
+          if CLI::UI::Prompt.confirm('Create SSH key in ~/.ssh/id_rsa - overwriting any existing ones?')
+            email = CLI::UI::Prompt.ask('What email should be used for this SSH key?')
+            system("ssh-keygen -t rsa -b 4096 -C \"#{email}\" -f ~/.ssh/id_rsa -q -N \"\"")
+            system("pbcopy < ~/.ssh/id_rsa.pub")
+
+            puts 'Please add the SSH Key to Github, it has been copied to your clipboard'
+            puts 'Opening Github now'
+            sleep(2)
+            system('open https://github.com/settings/ssh/new')
+          end
         end
       end
 
-      def restore_gpg
-        puts "Please copy your GPG keys from 1Password to ~/Desktop/gpg"
-        CLI::UI::Prompt.confirm('Did you copy your GPG keys from 1Password to ~/Desktop/gpg?')
+      def restore_setup_gpg
+        case CLI::UI::Prompt.ask('Do you want to restore existing or setup new GPG keys?', %w(restore setup))
+        when 'restore'
+          puts "Please copy your GPG keys from 1Password to ~/Desktop/gpg"
+          CLI::UI::Prompt.confirm('Did you copy your GPG keys from 1Password to ~/Desktop/gpg?')
 
-        if File.exist?("#{Dotfiles::HOME}/Desktop/gpg")
-          run("gpg --import #{Dotfiles::HOME}/Desktop/gpg/julian-secret-gpg.key")
-          run("gpg --import-ownertrust #{Dotfiles::HOME}/Desktop/gpg/julian-ownertrust-gpg.txt")
+          if File.exist?("#{Dotfiles::HOME}/Desktop/gpg")
+            run("gpg --import #{Dotfiles::HOME}/Desktop/gpg/julian-secret-gpg.key")
+            run("gpg --import-ownertrust #{Dotfiles::HOME}/Desktop/gpg/julian-ownertrust-gpg.txt")
 
-          FileUtils.rm_rf "#{Dotfiles::HOME}/Desktop/gpg"
+            FileUtils.rm_rf "#{Dotfiles::HOME}/Desktop/gpg"
 
-          run("git config --global commit.gpgsign true")
-          run("git config --global user.signingkey CAD41019602B5DC8") # TODO: GENERIC
+            run("git config --global commit.gpgsign true")
+            run("git config --global user.signingkey CAD41019602B5DC8") # TODO: GENERIC
+          end
+        when 'setup'
+          full_name = CLI::UI::Prompt.ask('What name should be associated with this GPG key?')
+          email = CLI::UI::Prompt.ask('What email should be used for this GPG key? (Make sure it is verified on Github)')
+          File.write('/tmp/gpg_conf', <<~EOF)
+          Key-Type: 1
+          Key-Length: 4096
+          Subkey-Type: 1
+          Subkey-Length: 4096
+          Name-Real: #{full_name}
+          Name-Email: #{email}
+          Expire-Date: 0
+          EOF
+          line = `gpg --batch --gen-key /tmp/gpg_conf`.lines.first
+          key = line.match(/gpg: key (\w+) marked as ultimately trusted/)[1]
+          if key.nil?
+            puts 'Cannot find key from the command. Follow https://help.github.com/en/articles/generating-a-new-gpg-key to find the key that was generated'
+            key = CLI::UI::Prompt.ask('What was the key that was generated?')
+          end
+          system("gpg --armor --export #{key} | pbcopy")
+          puts 'Please add the GPG Key to Github, it has been copied to your clipboard'
+          puts 'Opening Github now'
+          sleep(2)
+          system("open https://github.com/settings/gpg/new")
         end
       end
 
