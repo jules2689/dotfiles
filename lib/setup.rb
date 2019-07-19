@@ -76,7 +76,7 @@ module Dotfiles
       end
 
       def restore_setup_ssh
-        case CLI::UI::Prompt.ask('Do you want to restore existing or setup new SSH keys?', %w(restore setup))
+        case CLI::UI::Prompt.ask('Do you want to restore existing or setup new SSH keys?', options: %w(restore setup skip))
         when 'restore'
           puts "Please copy your SSH keys from 1Password to ~/Desktop/.ssh"
           CLI::UI::Prompt.confirm('Did you copy your SSH keys from 1Password to ~/Desktop/.ssh?')
@@ -93,8 +93,8 @@ module Dotfiles
             system("ssh-keygen -t rsa -b 4096 -C \"#{email}\" -f ~/.ssh/id_rsa -q -N \"\"")
             system("pbcopy < ~/.ssh/id_rsa.pub")
 
-            puts 'Please add the SSH Key to Github, it has been copied to your clipboard'
-            puts 'Opening Github now'
+            puts 'Please add the SSH Key to GitHub, it has been copied to your clipboard'
+            puts 'Opening GitHub now'
             sleep(2)
             system('open https://github.com/settings/ssh/new')
           end
@@ -102,7 +102,7 @@ module Dotfiles
       end
 
       def restore_setup_gpg
-        case CLI::UI::Prompt.ask('Do you want to restore existing or setup new GPG keys?', %w(restore setup))
+        case CLI::UI::Prompt.ask('Do you want to restore existing or setup new GPG keys?', options: %w(restore setup skip))
         when 'restore'
           puts "Please copy your GPG keys from 1Password to ~/Desktop/gpg"
           CLI::UI::Prompt.confirm('Did you copy your GPG keys from 1Password to ~/Desktop/gpg?')
@@ -117,8 +117,9 @@ module Dotfiles
             run("git config --global user.signingkey CAD41019602B5DC8") # TODO: GENERIC
           end
         when 'setup'
+          # Initial Setup
           full_name = CLI::UI::Prompt.ask('What name should be associated with this GPG key?')
-          email = CLI::UI::Prompt.ask('What email should be used for this GPG key? (Make sure it is verified on Github)')
+          email = CLI::UI::Prompt.ask('What email should be used for this GPG key? (Make sure it is verified on GitHub)')
           File.write('/tmp/gpg_conf', <<~EOF)
           Key-Type: 1
           Key-Length: 4096
@@ -128,15 +129,26 @@ module Dotfiles
           Name-Email: #{email}
           Expire-Date: 0
           EOF
-          line = `gpg --batch --gen-key /tmp/gpg_conf`.lines.first
+
+          # Generate GPG Keys
+          line = nil
+          spin_group = CLI::UI::SpinGroup.new
+          spin_group.add('Generating Key') do
+            line = `gpg --batch --gen-key /tmp/gpg_conf 2>&1`.lines.first
+          end
+          spinner.wait
+
+          # Extract data
           key = line.match(/gpg: key (\w+) marked as ultimately trusted/)[1]
           if key.nil?
             puts 'Cannot find key from the command. Follow https://help.github.com/en/articles/generating-a-new-gpg-key to find the key that was generated'
             key = CLI::UI::Prompt.ask('What was the key that was generated?')
           end
           system("gpg --armor --export #{key} | pbcopy")
-          puts 'Please add the GPG Key to Github, it has been copied to your clipboard'
-          puts 'Opening Github now'
+
+          # Add to GitHub
+          puts 'Please add the GPG Key to GitHub, it has been copied to your clipboard'
+          puts 'Opening GitHub now'
           sleep(2)
           system("open https://github.com/settings/gpg/new")
         end
