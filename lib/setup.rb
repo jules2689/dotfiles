@@ -124,7 +124,7 @@ module Dotfiles
           spin_group.add('Generating Key') do
             line = `gpg --batch --gen-key /tmp/gpg_conf 2>&1`.lines.first
           end
-          spinner.wait
+          spin_group.wait
 
           # Extract data
           key = line.match(/gpg: key (\w+) marked as ultimately trusted/)[1]
