@@ -9,6 +9,9 @@ tap "homebrew/services"
 tap "koekeishiya/formulae"
 tap "neovim/neovim"
 
+cask "adoptopenjdk"
+cask "google-chrome"
+
 brew "openssl"
 brew "autoconf"
 brew "automake"
