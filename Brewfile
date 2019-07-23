@@ -81,6 +81,7 @@ brew "ydiff"
 brew "zsh"
 
 cask "1password"
+cask "alfred"
 cask "dash"
 cask "docker"
 cask "evernote"
