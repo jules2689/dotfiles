@@ -1,7 +1,6 @@
 source ~/dotfiles/.github.bash
 source ~/dotfiles/.ruby.bash
 source ~/dotfiles/.aliases.bash
-source ~/dotfiles/.keys.bash
 if [ -f ~/.bashrc ]; then
   source ~/.bashrc
 fi
@@ -38,8 +37,6 @@ if [ "$SSH_AUTH_SOCK" != "$HOME/.gnupg/S.gpg-agent.ssh" ]; then
   eval $( gpg-agent --daemon --options "$HOME/.gnupg/gpg-agent.conf" --enable-ssh-support >/dev/null 2>&1 )
   export GPG_TTY=$(tty)
 fi
-
-source /Users/juliannadeau/src/github.com/jules2689/d2/exe/d2.sh
 
 docker_compose() {
   if [[ -f ".devcontainer/docker-compose.yml" ]] && [[ ! -f "docker-compose.yml" ]]; then
