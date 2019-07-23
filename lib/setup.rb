@@ -90,20 +90,7 @@ module Dotfiles
       end
 
       def restore_setup_gpg
-        case CLI::UI::Prompt.ask('Do you want to restore existing or setup new GPG keys?', options: %w(restore setup skip))
-        when 'restore'
-          puts "Please copy your GPG keys from 1Password to ~/Desktop/gpg"
-          CLI::UI::Prompt.confirm('Did you copy your GPG keys from 1Password to ~/Desktop/gpg?')
-
-          if File.exist?("#{Dotfiles::HOME}/Desktop/gpg")
-            run("gpg --import #{Dotfiles::HOME}/Desktop/gpg/julian-secret-gpg.key")
-            run("gpg --import-ownertrust #{Dotfiles::HOME}/Desktop/gpg/julian-ownertrust-gpg.txt")
-
-            FileUtils.rm_rf "#{Dotfiles::HOME}/Desktop/gpg"
-
-            run("git config --global commit.gpgsign true")
-            run("git config --global user.signingkey CAD41019602B5DC8") # TODO: GENERIC
-          end
+        case CLI::UI::Prompt.ask('Do you want to setup new GPG keys?', options: %w(setup skip))
         when 'setup'
           # Initial Setup
           full_name = CLI::UI::Prompt.ask('What name should be associated with this GPG key?')
@@ -133,6 +120,9 @@ module Dotfiles
             key = CLI::UI::Prompt.ask('What was the key that was generated?')
           end
           system("gpg --armor --export #{key} | pbcopy")
+
+          run("git config --global commit.gpgsign true")
+          run("git config --global user.signingkey #{key[-16..-1]}")
 
           # Add to GitHub
           puts 'Please add the GPG Key to GitHub, it has been copied to your clipboard'
