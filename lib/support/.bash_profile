@@ -12,6 +12,9 @@ source /usr/local/opt/chruby/share/chruby/auto.sh
 export JAVA_HOME=$(/usr/libexec/java_home)
 export ANDROID_HOME="/usr/local/opt/android-sdk"
 export GOPATH="$HOME"
+export EDITOR="vi"
+export HOMEBREW_NO_AUTO_UPDATE=1
+export HOMEBREW_BUNDLE_BREW_SKIP=1
 
 export PATH="/Applications/Postgres.app/Contents/MacOS/bin:$PATH"
 export PATH="/user/local:$PATH"
@@ -21,6 +24,8 @@ export PATH="/usr/local/sbin:$PATH"
 export PATH="$PATH:$GOPATH/bin"
 export PATH="$HOME/dotfiles/scripts/:$PATH"
 export PATH="/usr/local/bin:$PATH"
+export PATH="$PATH:/usr/local/opt/mysql@5.7/bin"
+export PATH="$(brew --prefix qt)/bin:$PATH"
 
 # Link Sublime to /usr/local/bin
 if [ ! -f /usr/local/bin/subl ]; then
@@ -38,6 +43,9 @@ if [ "$SSH_AUTH_SOCK" != "$HOME/.gnupg/S.gpg-agent.ssh" ]; then
   export GPG_TTY=$(tty)
 fi
 
+[ -f ~/src/github.com/jules2689/d2/exe/d2.sh ] && source ~/src/github.com/jules2689/d2/exe/d2.sh
+export PATH="$PATH:/Users/juliannadeau/src/github.com/github/gh-helper-cli/exe"
+
 docker_compose() {
   if [[ -f ".devcontainer/docker-compose.yml" ]] && [[ ! -f "docker-compose.yml" ]]; then
     export COMPOSE_FILE=".devcontainer/docker-compose.yml"
@@ -47,3 +55,8 @@ docker_compose() {
 }
 trap 'docker_compose' DEBUG
 if [ -e /Users/juliannadeau/.nix-profile/etc/profile.d/nix.sh ]; then . /Users/juliannadeau/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
+
+initenv() {
+  which rbenv && eval "$(rbenv init -)"
+  which nodenv && eval "$(nodenv init -)"
+}
