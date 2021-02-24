@@ -13,7 +13,7 @@ Setup a new computer
 
 It is not required to download this repo before running this command. It is meant to be run on a fresh install of Mac OS X.
 
-`bash <(curl -s https://raw.githubusercontent.com/jules2689/dotfiles/master/bin/download)`
+`bash <(curl -s https://raw.githubusercontent.com/jules2689/dotfiles/main/bin/download)`
 
 This command will download the `bin/download` file. This will clone this repo temporarily and install using `bin/install`.
 
@@ -25,4 +25,4 @@ This command will download the `bin/download` file. This will clone this repo te
 
 ### Brew Packages & Casks
 
-This will install a number of brew and cask packages listed [here](https://github.com/jules2689/dotfiles/blob/master/Brewfile)
+This will install a number of brew and cask packages listed [here](https://github.com/jules2689/dotfiles/blob/main/Brewfile)
