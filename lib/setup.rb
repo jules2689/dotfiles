@@ -45,7 +45,7 @@ module Dotfiles
         else
           ask(message, options: options)
         end
-      end)
+      end
 
       def install_homebrew
         return unless confirm('Do you want to run Homebrew install scripts?')

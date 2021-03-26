@@ -13,3 +13,5 @@ jobs:
     # Checkout the repo
     - uses: actions/checkout@v2
     - run: bin/install
+      env:
+        CI: "1"
