@@ -15,7 +15,11 @@ else
   echo "Command Line Tools already installed"
 fi
 
-mkpath ~/src/github.com/jules2689/dotfiles
+mkdir -p ~/src
+mkdir -p ~/src/github.com/
+mkdir -p ~/src/github.com/jules2689/
+mkdir -p ~/src/github.com/jules2689/dotfiles
+
 cd ~/src/github.com/jules2689/dotfiles
 git clone https://github.com/jules2689/dotfiles.git .
 bin/install
