@@ -66,7 +66,7 @@ module Dotfiles
         return if ENV["OP_SESSION"]
         email = ask('What is your 1Password email?')
         env_var = `op signin my.1password.com #{email} --raw`.chomp
-        ENV["OP_SESSION"] = env_var
+        run("op signin --session #{envvar}")
       end
 
       def setup_gh

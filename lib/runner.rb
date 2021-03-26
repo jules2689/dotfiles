@@ -22,7 +22,7 @@ module Dotfiles
 
       def run(cmd)
         output = ""
-        Open3.popen3({ "OP_SESSION" => ENV["OP_SESSION"] }, cmd) do |_, stdout, stderr, _|
+        Open3.popen3(cmd) do |_, stdout, stderr, _|
           while line = stdout.gets
             puts line
             output += line
