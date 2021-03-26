@@ -100,7 +100,7 @@ module Dotfiles
           FileUtils.mkdir_p(File.expand_path("~/.ssh"))
           File.write(File.expand_path("~/.ssh/id_rsa.pub"), public_key)
           File.write(File.expand_path("~/.ssh/id_rsa"), private_key)
-          FileUtils.chmod("600", File.expand_path("~/.ssh/id_rsa"))
+          FileUtils.chmod(0600, File.expand_path("~/.ssh/id_rsa"))
         when 'setup'
           if confirm('Create SSH key in ~/.ssh/id_rsa - overwriting any existing ones?')
             email = ask('What email should be used for this SSH key?')
