@@ -14,7 +14,7 @@ module Dotfiles
         
         FileUtils.mkdir_p(File.expand_path('~/src/github.com/jules2689'))
 
-        add_phase("Install Homebrew & Packages") { install_homebrew }
+        add_phase("Install Homebrew & Setup Auth") { install_homebrew_and_auth }
         add_phase("Restore App Settings") { restore_preferences }
         add_phase("Restore/Setup SSH Keys") { restore_setup_ssh }
         add_phase("Restore/Setup GPG Keys") { restore_setup_gpg }
@@ -46,22 +46,32 @@ module Dotfiles
         end
       end
 
-      def install_homebrew
-        return unless confirm('Do you want to run Homebrew install scripts?')
+      def install_homebrew_and_auth
         Dir.chdir(Dotfiles::REPO) do
-          system(INSTALL_BREW_COMMAND) unless system("which brew")
-          
-          return if `brew bundle check`.include?('are satisfied')
+          system(INSTALL_BREW_COMMAND) if confirm('Do you want to run Homebrew install scripts?') && !system("which brew")
           setup_onepassword
+          setup_gh
+        end
+
+      def brew_install
+        Dir.chdir(Dotfiles::REPO) do
+          return if `brew bundle check`.include?('are satisfied')
           run("brew bundle install")
         end
       end
 
       def setup_onepassword
-        run("brew install 1password") # Install this first so we can start setup
+        run("brew install 1password > /dev/null 2>&1") # Install this first so we can start setup
+        return if ENV["OP_SESSION"]
         email = ask('What is your 1Password email?')
-        env_var = run("op signin my.1password.com #{email} --raw")
+        env_var = `op signin my.1password.com #{email} --raw`.chomp
         ENV["OP_SESSION"] = env_var
+      end
+
+      def setup_gh
+        run("brew install gh > /dev/null 2>&1") # Install this first so we can start setup
+        return if `gh auth status`.include?("Logged in to github.com")
+        system("gh auth login --hostname github.com --web")
       end
 
       def restore_preferences
