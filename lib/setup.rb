@@ -42,7 +42,7 @@ module Dotfiles
           return "default@default.com" if options.nil?
           options.first
         else
-          ask(message, options: options)
+          CLI::UI::Prompt.ask(message, options: options)
         end
       end
 
