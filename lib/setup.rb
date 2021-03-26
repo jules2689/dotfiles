@@ -136,16 +136,17 @@ module Dotfiles
           line = nil
           spin_group = CLI::UI::SpinGroup.new
           spin_group.add('Generating Key') do
-            line = `gpg --batch --gen-key /tmp/gpg_conf 2>&1`.lines.first
+            line = `gpg --full-generate-key /tmp/gpg_conf 2>&1`.lines.first
           end
           spin_group.wait
 
           # Extract data
-          key = line.match(/gpg: key (\w+) marked as ultimately trusted/)[1]
-          if key.nil?
+          key = line.match(/gpg: key (\w+) marked as ultimately trusted/)
+          if key.nil? || key[1].nil?
             puts 'Cannot find key from the command. Follow https://help.github.com/en/articles/generating-a-new-gpg-key to find the key that was generated'
             key = ask('What was the key that was generated?')
           end
+          key = key[1]
           system("gpg --armor --export #{key} | pbcopy")
 
           run("git config --global commit.gpgsign true")
@@ -160,7 +161,7 @@ module Dotfiles
       end
 
       def run_1password_cmd(cmd)
-        `op signin --session #{@op_token} && #{cmd}"`.chomp
+        `eval $(op signin --session #{@op_token}) && #{cmd}`.chomp
       end
 
       def print_setup
@@ -172,6 +173,14 @@ module Dotfiles
           puts " |____/ \\___|\\__|\\__|_|_| |_|\\__, |  \\__,_| .__/   \\____\\___/|_| |_| |_| .__/ \\__,_|\\__\\___|_|     "
           puts "                             |___/        |_|                          |_|                         "
         end
+      end
+
+      def set_value_in_mac_keychain(key, value)
+        system("security add-generic-password -a \"#{key}\" -s \"#{value}\" -w -U")
+      end
+
+      def get_value_from_mac_keychain(key)
+        `security find-generic-password -a "#{key}" -w`.chomp
       end
 
       def print_finalization
