@@ -1,4 +1,6 @@
 #!/bin/bash
 
+set -euo pipefail
+
 sudo whoami > /dev/null # Check if user is has sudo rights
 ruby lib/setup.rb
