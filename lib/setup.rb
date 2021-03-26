@@ -6,7 +6,7 @@ require 'fileutils'
 
 module Dotfiles
   class Setup < Runner
-    INSTALL_BREW_COMMAND = 'ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" < /dev/null'
+    INSTALL_BREW_COMMAND = '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" < /dev/null'
 
     class << self
       def call
