@@ -1,4 +1,4 @@
 #!/bin/bash
 
-sudo whoami # Check if user is has sudo rights
+sudo whoami > /dev/null # Check if user is has sudo rights
 ruby lib/setup.rb
