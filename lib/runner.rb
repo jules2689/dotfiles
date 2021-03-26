@@ -21,14 +21,17 @@ module Dotfiles
       end
 
       def run(cmd)
-        Open3.popen3(cmd) do |_, stdout, stderr, _|
+        output = ""
+        Open3.popen3({ "OP_SESSION" => ENV["OP_SESSION"] }, cmd) do |_, stdout, stderr, _|
           while line = stdout.gets
             puts line
+            output += line
           end
           while line = stderr.gets
             puts line
           end
         end
+        output
       end
     end
   end

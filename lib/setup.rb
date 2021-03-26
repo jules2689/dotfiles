@@ -15,7 +15,6 @@ module Dotfiles
         FileUtils.mkdir_p(File.expand_path('~/src/github.com/jules2689'))
 
         add_phase("Install Homebrew & Packages") { install_homebrew }
-        add_phase("Log into 1Password") { log_into_onepassword }
         add_phase("Restore App Settings") { restore_preferences }
         add_phase("Restore/Setup SSH Keys") { restore_setup_ssh }
         add_phase("Restore/Setup GPG Keys") { restore_setup_gpg }
@@ -53,15 +52,16 @@ module Dotfiles
           system(INSTALL_BREW_COMMAND) unless system("which brew")
           
           return if `brew bundle check`.include?('are satisfied')
+          setup_onepassword
           run("brew bundle install")
         end
       end
 
-      def log_into_onepassword
-        puts "Sign into iCloud to synchronize 1Password. Enter anything to continue installation"
-        unless confirm('Is iCloud logged in? Is 1Password synced?')
-          raise 'Sync iCloud and 1Password to continue'
-        end
+      def setup_onepassword
+        run("brew install 1password") # Install this first so we can start setup
+        email = ask('What is your 1Password email?')
+        env_var = run("op signin my.1password.com #{email} --raw")
+        ENV["OP_SESSION"] = env_var
       end
 
       def restore_preferences
@@ -83,15 +83,13 @@ module Dotfiles
       def restore_setup_ssh
         case ask('Do you want to restore existing or setup new SSH keys?', options: %w(setup restore skip))
         when 'restore'
-          puts "Please copy your SSH keys from 1Password to ~/Desktop/.ssh"
-          confirm('Did you copy your SSH keys from 1Password to ~/Desktop/.ssh?')
+          public_key = run("op get document \"id_rsa.pub - SSH Key\"")
+          private_key = run("op get document \"id_rsa - SSH Key\"")
 
           FileUtils.mkdir_p(File.expand_path("~/.ssh"))
-          Dir.glob("#{Dotfiles::HOME}/Desktop/ssh/*") do |file|
-            path = File.expand_path("~/.ssh/#{File.basename(file)}")
-            next if File.exist?(path)
-            FileUtils.cp(file, path)
-          end
+          File.write(File.expand_path("~/.ssh/id_rsa.pub"), public_key)
+          File.write(File.expand_path("~/.ssh/id_rsa"), private_key)
+          FileUtils.chmod("600", File.expand_path("~/.ssh/id_rsa"))
         when 'setup'
           if confirm('Create SSH key in ~/.ssh/id_rsa - overwriting any existing ones?')
             email = ask('What email should be used for this SSH key?')
