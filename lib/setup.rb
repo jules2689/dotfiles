@@ -67,6 +67,7 @@ module Dotfiles
         email = ask('What is your 1Password email?')
         env_var = `op signin my.1password.com #{email} --raw`.chomp
         ENV["OP_SESSION"] = env_var
+        @op_token = env_var
       end
 
       def setup_gh
@@ -94,8 +95,8 @@ module Dotfiles
       def restore_setup_ssh
         case ask('Do you want to restore existing or setup new SSH keys?', options: %w(setup restore skip))
         when 'restore'
-          public_key = `op get document "id_rsa.pub - SSH Key"`.chomp
-          private_key = `op get document "id_rsa - SSH Key"`.chomp
+          public_key = run_1password_cmd("op get document \"id_rsa.pub - SSH Key\"")
+          private_key = run_1password_cmd("op get document \"id_rsa - SSH Key\"")
 
           FileUtils.mkdir_p(File.expand_path("~/.ssh"))
           File.write(File.expand_path("~/.ssh/id_rsa.pub"), public_key)
@@ -156,6 +157,10 @@ module Dotfiles
           sleep(2)
           system("open https://github.com/settings/gpg/new")
         end
+      end
+
+      def run_1password_cmd(cmd)
+        `op signin --session #{@op_token} && #{cmd}"`.chomp
       end
 
       def print_setup
