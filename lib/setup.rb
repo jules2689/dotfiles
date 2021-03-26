@@ -64,8 +64,20 @@ module Dotfiles
       def setup_onepassword
         run("brew install 1password > /dev/null 2>&1") # Install this first so we can start setup
         return if ENV["OP_SESSION"]
-        email = ask('What is your 1Password email?')
-        env_var = `op signin my.1password.com #{email} --raw`.chomp
+
+        email = get_value_from_mac_keychain("onepassword.email")
+        if email.empty?
+          email = ask('What is your 1Password email?')
+          set_value_in_mac_keychain("onepassword.email", email)
+        end
+
+        key = get_value_from_mac_keychain("onepassword.secret_key")
+        if key.empty?
+          key = ask('What is your secret key?')
+          set_value_in_mac_keychain("onepassword.secret_key", key)
+        end
+
+        env_var = `op signin my.1password.com #{email} #{key} --raw`.chomp
         ENV["OP_SESSION"] = env_var
         @op_token = env_var
       end
@@ -136,11 +148,12 @@ module Dotfiles
           line = nil
           spin_group = CLI::UI::SpinGroup.new
           spin_group.add('Generating Key') do
-            line = `gpg --full-generate-key /tmp/gpg_conf 2>&1`.lines.first
+            line = `gpg --batch --gen-key /tmp/gpg_conf 2>&1`.lines.first
           end
           spin_group.wait
 
           # Extract data
+          puts line
           key = line.match(/gpg: key (\w+) marked as ultimately trusted/)
           if key.nil? || key[1].nil?
             puts 'Cannot find key from the command. Follow https://help.github.com/en/articles/generating-a-new-gpg-key to find the key that was generated'
@@ -176,7 +189,7 @@ module Dotfiles
       end
 
       def set_value_in_mac_keychain(key, value)
-        system("security add-generic-password -a \"#{key}\" -s \"#{value}\" -w -U")
+        system("security add-generic-password -a \"#{key}\" -s dotfiles -w \"#{value}\"")
       end
 
       def get_value_from_mac_keychain(key)
