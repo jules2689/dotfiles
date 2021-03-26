@@ -102,6 +102,7 @@ module Dotfiles
       def run_various
         puts "Setting some default system settings"
         run("DevToolsSecurity -enable")
+        run("chsh -s /bin/bash")
       end
 
       def restore_setup_ssh
@@ -193,7 +194,7 @@ module Dotfiles
       end
 
       def get_value_from_mac_keychain(key)
-        `security find-generic-password -a "#{key}" -w`.chomp
+        `security find-generic-password -a "#{key}" -w 2> /dev/null`.chomp
       end
 
       def print_finalization
