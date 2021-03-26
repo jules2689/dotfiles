@@ -52,6 +52,7 @@ module Dotfiles
           setup_onepassword
           setup_gh
         end
+      end
 
       def brew_install
         Dir.chdir(Dotfiles::REPO) do
