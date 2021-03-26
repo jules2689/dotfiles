@@ -1,0 +1,15 @@
+name: General CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: macos-latest
+    timeout-minutes: 15
+    steps:
+    # Checkout the repo
+    - uses: actions/checkout@v2
+    - run: bin/install

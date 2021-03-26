@@ -30,8 +30,25 @@ module Dotfiles
 
       private
 
+      def confirm(message)
+        if ENV["CI"]
+          true
+        else
+          CLI::UI::Prompt.confirm(message)
+        end
+      end
+
+      def ask(message, options: nil)
+        if ENV["CI"]
+          return "default@default.com" if options.nil?
+          options.first
+        else
+          ask(message, options: options)
+        end
+      end)
+
       def install_homebrew
-        return unless CLI::UI::Prompt.confirm('Do you want to run Homebrew install scripts?')
+        return unless confirm('Do you want to run Homebrew install scripts?')
         Dir.chdir(Dotfiles::REPO) do
           system(INSTALL_BREW_COMMAND) unless system("which brew")
           
@@ -42,7 +59,7 @@ module Dotfiles
 
       def log_into_onepassword
         puts "Sign into iCloud to synchronize 1Password. Enter anything to continue installation"
-        unless CLI::UI::Prompt.confirm('Is iCloud logged in? Is 1Password synced?')
+        unless confirm('Is iCloud logged in? Is 1Password synced?')
           raise 'Sync iCloud and 1Password to continue'
         end
       end
@@ -64,10 +81,10 @@ module Dotfiles
       end
 
       def restore_setup_ssh
-        case CLI::UI::Prompt.ask('Do you want to restore existing or setup new SSH keys?', options: %w(restore setup skip))
+        case ask('Do you want to restore existing or setup new SSH keys?', options: %w(setup restore skip))
         when 'restore'
           puts "Please copy your SSH keys from 1Password to ~/Desktop/.ssh"
-          CLI::UI::Prompt.confirm('Did you copy your SSH keys from 1Password to ~/Desktop/.ssh?')
+          confirm('Did you copy your SSH keys from 1Password to ~/Desktop/.ssh?')
 
           FileUtils.mkdir_p(File.expand_path("~/.ssh"))
           Dir.glob("#{Dotfiles::HOME}/Desktop/ssh/*") do |file|
@@ -76,8 +93,8 @@ module Dotfiles
             FileUtils.cp(file, path)
           end
         when 'setup'
-          if CLI::UI::Prompt.confirm('Create SSH key in ~/.ssh/id_rsa - overwriting any existing ones?')
-            email = CLI::UI::Prompt.ask('What email should be used for this SSH key?')
+          if confirm('Create SSH key in ~/.ssh/id_rsa - overwriting any existing ones?')
+            email = ask('What email should be used for this SSH key?')
             system("ssh-keygen -t rsa -b 4096 -C \"#{email}\" -f ~/.ssh/id_rsa -q -N \"\"")
             system("pbcopy < ~/.ssh/id_rsa.pub")
 
@@ -90,11 +107,11 @@ module Dotfiles
       end
 
       def restore_setup_gpg
-        case CLI::UI::Prompt.ask('Do you want to setup new GPG keys?', options: %w(setup skip))
+        case ask('Do you want to setup new GPG keys?', options: %w(setup skip))
         when 'setup'
           # Initial Setup
-          full_name = CLI::UI::Prompt.ask('What name should be associated with this GPG key?')
-          email = CLI::UI::Prompt.ask('What email should be used for this GPG key? (Make sure it is verified on GitHub)')
+          full_name = ask('What name should be associated with this GPG key?')
+          email = ask('What email should be used for this GPG key? (Make sure it is verified on GitHub)')
           File.write('/tmp/gpg_conf', <<~EOF)
           Key-Type: 1
           Key-Length: 4096
@@ -117,7 +134,7 @@ module Dotfiles
           key = line.match(/gpg: key (\w+) marked as ultimately trusted/)[1]
           if key.nil?
             puts 'Cannot find key from the command. Follow https://help.github.com/en/articles/generating-a-new-gpg-key to find the key that was generated'
-            key = CLI::UI::Prompt.ask('What was the key that was generated?')
+            key = ask('What was the key that was generated?')
           end
           system("gpg --armor --export #{key} | pbcopy")
 
