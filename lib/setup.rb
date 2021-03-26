@@ -71,7 +71,7 @@ module Dotfiles
 
       def setup_gh
         run("brew install gh > /dev/null 2>&1") # Install this first so we can start setup
-        return if `gh auth status`.include?("Logged in to github.com")
+        return if `gh auth status 2>&1`.include?("Logged in to github.com")
         system("gh auth login --hostname github.com --web")
       end
 
