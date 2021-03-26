@@ -15,6 +15,8 @@ export GOPATH="$HOME"
 export EDITOR="vi"
 export HOMEBREW_NO_AUTO_UPDATE=1
 export HOMEBREW_BUNDLE_BREW_SKIP=1
+export GITHUB_PROFILE_BOOTSTRAP=1
+export GITHUB_NO_AUTO_BOOTSTRAP=1
 
 export PATH="/Applications/Postgres.app/Contents/MacOS/bin:$PATH"
 export PATH="/user/local:$PATH"
