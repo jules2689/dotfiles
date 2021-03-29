@@ -103,6 +103,7 @@ module Dotfiles
         puts "Setting some default system settings"
         run("DevToolsSecurity -enable")
         run("chsh -s /bin/bash")
+        run("git config --global init.defaultBranch main")
       end
 
       def restore_setup_ssh
