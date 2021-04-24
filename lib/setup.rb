@@ -16,6 +16,7 @@ module Dotfiles
         FileUtils.mkdir_p(File.expand_path('~/src/github.com/jules2689'))
 
         add_phase("Install Homebrew & Setup Auth") { install_homebrew_and_auth }
+        add_phase("brew install") { brew_install }
         add_phase("Restore/Setup SSH Keys") { restore_setup_ssh }
         add_phase("Restore/Setup GPG Keys") { restore_setup_gpg }
         add_phase("Run Install Script for Dotfiles") { install_script }
