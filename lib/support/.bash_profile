@@ -29,14 +29,10 @@ export PATH="/usr/local/bin:$PATH"
 export PATH="$PATH:/usr/local/opt/mysql@5.7/bin"
 export PATH="$(brew --prefix qt)/bin:$PATH"
 
-# Link Sublime to /usr/local/bin
-if [ ! -f /usr/local/bin/subl ]; then
-  ln -s "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl" /usr/local/bin/subl
-fi
-
 # SSH Identity
 eval "$(ssh-agent -s)" > /dev/null 2>&1
 ssh-add ~/.ssh/id_rsa > /dev/null 2>&1
+ssh-add ~/.ssh/id_ed25519 > /dev/null 2>&1
 
 # GPG
 [ -f ~/.gpg-agent-info ] && source ~/.gpg-agent-info
@@ -62,3 +58,6 @@ initenv() {
   which rbenv && eval "$(rbenv init -)"
   which nodenv && eval "$(nodenv init -)"
 }
+if command -v pyenv 1>/dev/null 2>&1; then
+  eval "$(pyenv init -)"
+fi
