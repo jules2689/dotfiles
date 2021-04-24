@@ -8,7 +8,7 @@ module Dotfiles
       def call
         @phases = []
 
-        add_phase("Setup Bash Profile") { bash_profile }           
+        add_phase("Setup ZSH") { zsh_files }           
         add_phase("Clean dotfiles") { clean_dotfiles }         
         add_phase("Symlink dotfiles to system") { symlink_dotfiles }       
         add_phase("Setup SSH & GPG Config") { ssh_gpg_config }
@@ -19,11 +19,13 @@ module Dotfiles
 
       private
 
-      def bash_profile
-        from = "#{Dotfiles::REPO}/lib/support/.bash_profile"
-        to = "#{Dotfiles::HOME}/.bash_profile"
-        puts "Relinking ~/.bash_profile #{from} to #{to}"
-        FileUtils.ln_s(from, to, force: true)
+      def zsh_files
+        %w(zshrc zshenv).each do |file|
+          from = "#{Dotfiles::REPO}/lib/support/.#{file}"
+          to = "#{Dotfiles::HOME}/.#{file}"
+          puts "Relinking ~/.#{file} #{from} to #{to}"
+          FileUtils.ln_s(from, to, force: true)
+        end
       end
 
       def clean_dotfiles
@@ -35,21 +37,8 @@ module Dotfiles
       def symlink_dotfiles
         FileUtils.mkdir_p("#{Dotfiles::HOME}/dotfiles/scripts/")
 
-        Dir.chdir("#{Dotfiles::REPO}/lib/support/scripts") do
-          Dir.glob('*') do |file|
-            from = "#{Dir.pwd}/#{file}"
-            to = "#{Dotfiles::HOME}/dotfiles/scripts/#{file}"
-            puts "Symlinking #{from} to #{to}"
-            FileUtils.ln_s(
-              from,
-              to,
-              force: true
-            )
-          end
-        end
-
         Dir.chdir("#{Dotfiles::REPO}/lib/support") do
-          Dir.glob('.*.bash') do |file|
+          Dir.glob('.*.zsh') do |file|
             puts "Symlinking #{file} to #{Dotfiles::HOME}/dotfiles/scripts/#{file}"
             FileUtils.cp file, "#{Dotfiles::HOME}/dotfiles/#{File.basename(file)}"
           end
@@ -58,7 +47,13 @@ module Dotfiles
 
       def git_completion
         puts "Installing Git Completion"
-        FileUtils.cp "#{Dotfiles::REPO}/lib/support/git_completion.sh", "#{Dotfiles::HOME}/.git-completion.bash"
+        FileUtils.mkdir_p("#{Dotfiles::HOME}/.zsh")
+
+        bash = Net::HTTP.get_response(URI("https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash"))
+        File.write("#{Dotfiles::HOME}/.zsh/.git-completion.bash", bash.body)
+
+        zsh = Net::HTTP.get_response(URI("https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.zsh"))
+        File.write("#{Dotfiles::HOME}/.zsh/.git-completion.zsh", zsh.body)
       end
 
       def ssh_gpg_config
@@ -73,4 +68,8 @@ module Dotfiles
       end
     end
   end
+end
+
+if __FILE__ == $0
+  Dotfiles::Install.call
 end

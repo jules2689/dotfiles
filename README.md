@@ -21,7 +21,7 @@ This command will download the `bin/download` file. This will clone this repo te
 2. Will install packages and casks
 3. Will install various scripts and the latest Ruby
 4. Create a `.ssh` directory and generates a private/public keypair. This also copies the public key to the clipboard.
-5. Setup `.bash_profile`
+5. Setup `.zshrc` and `.zshenv`
 
 ### Brew Packages & Casks
 

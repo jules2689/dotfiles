@@ -211,7 +211,6 @@ mas "Dato", id: 1470584107
 mas "GIF Brewery 3", id: 1081413713
 mas "iMovie", id: 408981434
 mas "Keynote", id: 409183694
-mas "Kindle", id: 405399194
 mas "LINE", id: 539883307
 mas "Magnet", id: 441258766
 mas "Microsoft Remote Desktop", id: 1295203466

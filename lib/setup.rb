@@ -58,7 +58,6 @@ module Dotfiles
       def run_various
         puts "Setting some default system settings"
         run("DevToolsSecurity -enable")
-        run("chsh -s /bin/bash")
         run("git config --global init.defaultBranch main")
         run("ssh-keyscan -H github.com >> ~/.ssh/known_hosts")
       end
