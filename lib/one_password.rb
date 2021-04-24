@@ -4,8 +4,8 @@ module Dotfiles
   class OnePassword < Runner
     class << self
       def setup
-        run("brew install 1password") # Install this first so we can start setup
-        run("brew install 1password-cli") # Install this first so we can start setup
+        run("[[ -d '/Applications/1Password 7.app' ]] || brew install 1password") # Install this first so we can start setup
+        run("which op 2>&1 > /dev/null || brew install 1password-cli") # Install this first so we can start setup
         return if ENV["OP_SESSION"]
 
         email = get_value_from_mac_keychain("onepassword.email")
