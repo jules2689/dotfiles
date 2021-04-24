@@ -33,6 +33,23 @@ module Dotfiles
         end
         output
       end
+
+      def confirm(message)
+        if ENV["CI"]
+          true
+        else
+          CLI::UI::Prompt.confirm(message)
+        end
+      end
+
+      def ask(message, options: nil)
+        if ENV["CI"]
+          return "default@default.com" if options.nil?
+          options.first
+        else
+          CLI::UI::Prompt.ask(message, options: options)
+        end
+      end
     end
   end
 end
