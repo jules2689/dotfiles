@@ -54,10 +54,8 @@ docker_compose() {
 trap 'docker_compose' DEBUG
 if [ -e /Users/juliannadeau/.nix-profile/etc/profile.d/nix.sh ]; then . /Users/juliannadeau/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
 
-initenv() {
-  which rbenv && eval "$(rbenv init -)"
-  which nodenv && eval "$(nodenv init -)"
-}
+which rbenv && eval "$(rbenv init -)"
+which nodenv && eval "$(nodenv init -)"
 if command -v pyenv 1>/dev/null 2>&1; then
   eval "$(pyenv init -)"
 fi

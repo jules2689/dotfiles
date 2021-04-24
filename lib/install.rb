@@ -9,7 +9,6 @@ module Dotfiles
         @phases = []
 
         add_phase("Setup Bash Profile") { bash_profile }           
-        add_phase("Setup Vim") { vim }                
         add_phase("Clean dotfiles") { clean_dotfiles }         
         add_phase("Symlink dotfiles to system") { symlink_dotfiles }       
         add_phase("Setup SSH & GPG Config") { ssh_gpg_config }
@@ -55,20 +54,6 @@ module Dotfiles
             FileUtils.cp file, "#{Dotfiles::HOME}/dotfiles/#{File.basename(file)}"
           end
         end
-      end
-
-      def vim
-        run("ssh-keyscan -H github.com >> ~/.ssh/known_hosts")
-
-        FileUtils.mkdir_p "#{Dotfiles::HOME}/.vim"
-
-        FileUtils.ln_s "#{Dotfiles::REPO}/support/.vimrc", "#{Dotfiles::HOME}/.vimrc", force: true
-        FileUtils.ln_s "#{Dotfiles::REPO}/support/.vimrc", "#{Dotfiles::HOME}/.vim/init.vim", force: true
-
-        FileUtils.mkdir_p("#{Dotfiles::HOME}/.config")
-        FileUtils.ln_s "#{Dotfiles::HOME}/.vim", "#{Dotfiles::HOME}/.config/nvim", force: true
-
-        run("bash #{Dotfiles::REPO}/lib/support/vim_plugins.sh")
       end
 
       def git_completion

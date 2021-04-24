@@ -2,6 +2,7 @@
 
 require_relative 'load'
 require_relative 'install'
+require_relative 'one_password'
 require 'fileutils'
 
 module Dotfiles
@@ -15,16 +16,13 @@ module Dotfiles
         FileUtils.mkdir_p(File.expand_path('~/src/github.com/jules2689'))
 
         add_phase("Install Homebrew & Setup Auth") { install_homebrew_and_auth }
-        add_phase("Restore App Settings") { restore_preferences }
         add_phase("Restore/Setup SSH Keys") { restore_setup_ssh }
         add_phase("Restore/Setup GPG Keys") { restore_setup_gpg }
         add_phase("Run Install Script for Dotfiles") { install_script }
         add_phase("Finalize installation") { run_various }
 
         CLI::UI::StdoutRouter.enable
-        print_setup
         run_phases
-        print_finalization
       end
 
       private
@@ -48,8 +46,10 @@ module Dotfiles
 
       def install_homebrew_and_auth
         Dir.chdir(Dotfiles::REPO) do
-          system(INSTALL_BREW_COMMAND) if confirm('Do you want to run Homebrew install scripts?') && !system("which brew")
-          setup_onepassword
+          if confirm('Do you want to run Homebrew install scripts?') && !system("which brew")
+            system(INSTALL_BREW_COMMAND)
+          end
+          OnePassword.setup
           setup_gh
         end
       end
@@ -59,40 +59,12 @@ module Dotfiles
           return if `brew bundle check`.include?('are satisfied')
           run("brew bundle install")
         end
-      end
-
-      def setup_onepassword
-        run("brew install 1password > /dev/null 2>&1") # Install this first so we can start setup
-        return if ENV["OP_SESSION"]
-
-        email = get_value_from_mac_keychain("onepassword.email")
-        if email.empty?
-          email = ask('What is your 1Password email?')
-          set_value_in_mac_keychain("onepassword.email", email)
-        end
-
-        key = get_value_from_mac_keychain("onepassword.secret_key")
-        if key.empty?
-          key = ask('What is your secret key?')
-          set_value_in_mac_keychain("onepassword.secret_key", key)
-        end
-
-        env_var = `op signin my.1password.com #{email} #{key} --raw`.chomp
-        ENV["OP_SESSION"] = env_var
-        @op_token = env_var
-      end
+      end      
 
       def setup_gh
         run("brew install gh > /dev/null 2>&1") # Install this first so we can start setup
         return if `gh auth status 2>&1`.include?("Logged in to github.com")
         system("gh auth login --hostname github.com --web")
-      end
-
-      def restore_preferences
-        FileUtils.cp(
-          "#{Dotfiles::REPO}/lib/provision/preferences/com.googlecode.iterm2.plist",
-          "#{Dotfiles::HOME}/Library/Preferences/com.googlecode.iterm2.plist"
-        )
       end
 
       def install_script
@@ -104,13 +76,14 @@ module Dotfiles
         run("DevToolsSecurity -enable")
         run("chsh -s /bin/bash")
         run("git config --global init.defaultBranch main")
+        run("ssh-keyscan -H github.com >> ~/.ssh/known_hosts")
       end
 
       def restore_setup_ssh
         case ask('Do you want to restore existing or setup new SSH keys?', options: %w(setup restore skip))
         when 'restore'
-          public_key = run_1password_cmd("op get document \"id_rsa.pub - SSH Key\"")
-          private_key = run_1password_cmd("op get document \"id_rsa - SSH Key\"")
+          public_key = OnePassword.run_cmd("op get document \"id_rsa.pub - SSH Key\"")
+          private_key = OnePassword.run_cmd("op get document \"id_rsa - SSH Key\"")
 
           FileUtils.mkdir_p(File.expand_path("~/.ssh"))
           File.write(File.expand_path("~/.ssh/id_rsa.pub"), public_key)
@@ -172,39 +145,6 @@ module Dotfiles
           puts 'Opening GitHub now'
           sleep(2)
           system("open https://github.com/settings/gpg/new")
-        end
-      end
-
-      def run_1password_cmd(cmd)
-        `eval $(op signin --session #{@op_token}) && #{cmd}`.chomp
-      end
-
-      def print_setup
-        CLI::UI::Frame.open('', timing: false) do
-          puts "  ____       _   _   _                              ____                            _              "
-          puts " / ___|  ___| |_| |_(_)_ __   __ _   _   _ _ __    / ___|___  _ __ ___  _ __  _   _| |_ ___ _ __   "
-          puts " \\___ \\ / _ | __| __| | '_ \\ / _' | | | | | '_ \\  | |   / _ \\| '_ ' _ \\| '_ \\| | | | __/ _ | '__|  "
-          puts "  ___) |  __| |_| |_| | | | | (_| | | |_| | |_) | | |__| (_) | | | | | | |_) | |_| | ||  __| |     "
-          puts " |____/ \\___|\\__|\\__|_|_| |_|\\__, |  \\__,_| .__/   \\____\\___/|_| |_| |_| .__/ \\__,_|\\__\\___|_|     "
-          puts "                             |___/        |_|                          |_|                         "
-        end
-      end
-
-      def set_value_in_mac_keychain(key, value)
-        system("security add-generic-password -a \"#{key}\" -s dotfiles -w \"#{value}\"")
-      end
-
-      def get_value_from_mac_keychain(key)
-        `security find-generic-password -a "#{key}" -w 2> /dev/null`.chomp
-      end
-
-      def print_finalization
-        CLI::UI::Frame.open('') do
-          puts "How to finalize the installation"
-          puts "================================="
-          puts "1. Restart terminal"
-          puts "2. Sign into Firefox, Spotify, Slack, XCode."
-          puts "3. Fix the screenshot shortcut in keyboard settings."
         end
       end
     end
