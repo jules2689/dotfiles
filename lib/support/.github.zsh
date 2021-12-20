@@ -13,7 +13,7 @@ YELLOW="%F{33}"
 GREEN="%F{32}"
 WHITE="%F{37}"
 
-PS1="HELLO %F{red}%1 %F{yellow}\$(parse_git_branch)%f ➜ "
+PS1="%F{red}\$(pwd)%1 %F{yellow}\$(parse_git_branch)%f ➜ "
 
 zstyle ':completion:*:*:git:*' script ~/.zsh/git-completion.bash
 fpath=(~/.zsh $fpath)
